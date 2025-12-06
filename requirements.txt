@@ -1,4 +1,4 @@
-Django==4.2.11
+django==4.2.11
 python-dotenv==1.0.1
 GDAL==3.6.2
 
