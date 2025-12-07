@@ -5,7 +5,7 @@
     "python.defaultInterpreterPath": "/workspaces/${localWorkspaceFolderBasename}/.venv/bin/python",
     "editor.formatOnSave": true
   },
-  "postCreateCommand": "python -m venv .venv && . .venv/bin/activate && pip install --upgrade pip && sudo apt-get install -y libgdal-dev python3-gdal && pip install -r requirements.txt",
+  "postCreateCommand": "python -m venv .venv && . .venv/bin/activate && pip install --upgrade pip && sudo apt-get install -y libgdal-dev python3-gdal && sudo apt-get install -y python3-pysqlite3 libsqlite3-mod-spatialite && pip install -r requirements.txt",
   "forwardPorts": [8000],
   "customizations": {
     "vscode": {
