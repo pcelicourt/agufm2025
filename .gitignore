@@ -24,8 +24,6 @@ dist/
 ###############################################
 db.sqlite3
 media/
-staticfiles/
-static/
 
 ###############################################
 # GITPOD / CODESPACES SAFETY
