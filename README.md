@@ -23,6 +23,7 @@ $ python manage.py startapp geowebapp
 import os
 from dotenv import load_dotenv
 load_dotenv(os.path.join(BASE_DIR, ".env"))
+from ctypes.util import find_library
 `
 
 # Replace the variable INSTALLED_APPS with the following value
@@ -51,6 +52,11 @@ DATABASES = {
         "PORT": os.getenv("POSTGRES_PORT", "5432"),
     }
 }
+`
+`
+GDAL_LIBRARY_PATH = find_library("gdal")
+GEOS_LIBRARY_PATH = find_library("geos_c")
+SPATIALITE_LIBRARY_PATH = "mod_spatialite"
 `
 
 # CodeSpaces Terminal
