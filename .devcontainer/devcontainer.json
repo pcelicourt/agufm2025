@@ -1,12 +1,23 @@
 {
   "name": "Django + GDAL Workshop (Pinned)",
-  "build": { "dockerfile": "Dockerfile" },
+  "build": {
+    "dockerfile": "Dockerfile"
+  },
   "settings": {
     "python.defaultInterpreterPath": "/workspaces/${localWorkspaceFolderBasename}/.venv/bin/python",
     "editor.formatOnSave": true
   },
-  "postCreateCommand": "python -m venv .venv && . .venv/bin/activate && pip install --upgrade pip && pip install -r requirements.txt",
-  "forwardPorts": [8000],
+  "postCreateCommand": "python -m venv .venv && . .venv/bin/activate && pip install --upgrade pip && pip install -r requirements.txt && sudo apt-get update && sudo apt-get install -y libgdal-dev python3-gdal libsqlite3-mod-spatialite libspatialite-dev postgresql-15 postgresql-15-postgis-3",
+  "forwardPorts": [
+    8000,
+    5432
+  ],
+  "portsAttributes": {
+    "5432": {
+      "label": "PostgreSQL port",
+      "onAutoForward": "silent"
+    }
+  },
   "customizations": {
     "vscode": {
       "extensions": [
@@ -18,5 +29,8 @@
       ]
     }
   },
+  "mounts": [
+  "source=devcontainer-postgres-data,target=/var/lib/postgresql/data,type=volume"
+],
   "remoteUser": "vscode"
 }

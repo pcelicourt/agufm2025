@@ -1,20 +1,58 @@
-# tamplate
-Démarrer
-1. Use this template.
-2. Open in Codespaces
-3. Laissez la construction finir (devcontainer).
+# Tutorial for the American Geophysical Union Fall Meeting 2025
 
-Pui executer ces lignes de commande pour activer l'env et vérifier les versions de python et django
+# Following the setup of the agufm25 template in CodeSpaces, run the following commands to create a Django WebGIS Application in your terminal
 
-1. source .venv/bin/activate
-2. python --version
-3. python -m django --version
-4. gdalinfo --version
-5. python -c "from osgeo import gdal; print('GDAL Python:', gdal.VersionInfo())"
+# CodeSpaces Terminal
+$ source .venv/bin/activate
 
-'''
-  jjj
-      ee
-      eee
-         eee
-    '''
+$ python --version
+
+$ python -m django --version
+
+# Still in the terminal, run the following commands to create a Django Project with name geoweb
+$ django-admin startproject geoweb
+
+# Change to the newly created directory geoweb
+$ cd geoweb
+
+# Still in the terminal, run the following commands to create a Django App with name geowebapp
+$ python manage.py startapp geowebapp
+
+# In the settings.py file within the geoweb folder, add the following codes
+`
+import os
+from dotenv import load_dotenv
+load_dotenv(os.path.join(BASE_DIR, ".env"))
+`
+
+# Replace the variable INSTALLED_APPS with the following value
+`
+INSTALLED_APPS = [
+    "django.contrib.admin",
+    "django.contrib.auth",
+    "django.contrib.contenttypes",
+    "django.contrib.sessions",
+    "django.contrib.messages",
+   "django.contrib.staticfiles",
+    "django.contrib.gis",
+    "geowebapp",
+]
+`
+
+# Replace the variable DATABASES with the following value
+`
+DATABASES = {
+    "default": {
+        "ENGINE": "django.contrib.gis.db.backends.postgis",
+        "NAME": os.getenv("POSTGRES_DB", "mydb"),
+        "USER": os.getenv("POSTGRES_USER", "postgres"),
+        "PASSWORD": os.getenv("POSTGRES_PASSWORD", "postgres"),
+        "HOST": os.getenv("POSTGRES_HOST", "localhost"), 
+        "PORT": os.getenv("POSTGRES_PORT", "5432"),
+    }
+}
+`
+
+# CodeSpaces Terminal
+$ python manage.py migrate
+$ python manage.py runserver
