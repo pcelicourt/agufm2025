@@ -21,7 +21,9 @@ $ python manage.py startapp geowebapp
 # In the settings.py file within the geoweb folder, add the following codes
 
 from dotenv import load_dotenv
+
 BASE_DIR = Path(__file__).resolve().parent.parent
+
 load_dotenv(os.path.join(BASE_DIR, ".env"))
 
 # Replace the variable INSTALLED_APPS with the following value
