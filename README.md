@@ -20,6 +20,7 @@ $ python manage.py startapp geowebapp
 
 # In the settings.py file within the geoweb folder, add the following codes
 import os
+
 from dotenv import load_dotenv
 
 load_dotenv(os.path.join(BASE_DIR, ".env"))
