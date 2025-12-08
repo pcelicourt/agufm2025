@@ -1,6 +1,8 @@
 # Tutorial for the American Geophysical Union Fall Meeting 2025
 
 # Following the setup of the agufm25 template in CodeSpaces, run the following commands to create a Django WebGIS Application in your terminal
+
+# CodeSpaces Terminal
 $ source .venv/bin/activate
 
 $ python --version
@@ -21,6 +23,7 @@ $ python manage.py startapp geowebapp
 import os
 from dotenv import load_dotenv
 load_dotenv(os.path.join(BASE_DIR, ".env"))
+from ctypes.util import find_library
 `
 
 # Replace the variable INSTALLED_APPS with the following value
@@ -50,7 +53,12 @@ DATABASES = {
     }
 }
 `
+`
+GDAL_LIBRARY_PATH = find_library("gdal")
+GEOS_LIBRARY_PATH = find_library("geos_c")
+SPATIALITE_LIBRARY_PATH = "mod_spatialite"
+`
 
-# Run these commands in the CodeSpaces Terminal
+# CodeSpaces Terminal
 $ python manage.py migrate
 $ python manage.py runserver
