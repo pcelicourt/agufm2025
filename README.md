@@ -1,28 +1,31 @@
 # agufm2025
-Template for Geoinformatics workshop at AGU Fall Meeting 2025
+# Template for Geoinformatics workshop at AGU Fall Meeting 2025
 
-Run the following commands to create a Django WebGIS Application in your terminal
+# Run the following commands to create a Django WebGIS Application in your terminal
 
-#CodeSpaces Terminal
+# CodeSpaces Terminal
 $ source .venv/bin/activate
 
 $ python --version
 
 $ python -m django --version
 
-django-admin startproject geoweb
+# Still in the terminal, run the following commands to create a Django Project with name geoweb
+$ django-admin startproject geoweb
 
-cd geoweb
+# Change to the newly created directory
+$ cd geoweb
 
-python manage.py startapp geowebapp
+# Still in the terminal, run the following commands to create a Django App with name geowebapp
+$ python manage.py startapp geowebapp
 
-#settings.py
+# In the settings.py file within the geoweb folder, add the following codes
 
 from dotenv import load_dotenv
 BASE_DIR = Path(__file__).resolve().parent.parent
 load_dotenv(os.path.join(BASE_DIR, ".env"))
 
-
+# Replace the variable INSTALLED_APPS with the following value
 INSTALLED_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",
@@ -34,7 +37,7 @@ INSTALLED_APPS = [
     "geowebapp",
 ]
 
-
+# Replace the variable DATABASES with the following value
 DATABASES = {
     "default": {
         "ENGINE": "django.contrib.gis.db.backends.postgis",
@@ -46,6 +49,6 @@ DATABASES = {
     }
 }
 
-#CodeSpaces Terminal
+# CodeSpaces Terminal
 $ python manage.py migrate
 $ python manage.py runserver
