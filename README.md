@@ -28,14 +28,14 @@ load_dotenv(os.path.join(BASE_DIR, ".env"))
 # Replace the variable INSTALLED_APPS with the following value
 `
 INSTALLED_APPS = [
-    "django.contrib.admin",
-    "django.contrib.auth",
-    "django.contrib.contenttypes",
-    "django.contrib.sessions",
-    "django.contrib.messages",
-   "django.contrib.staticfiles",
-    "django.contrib.gis",
-    "geowebapp",
+    "django.contrib.admin",<br>
+    "django.contrib.auth",<br>
+    "django.contrib.contenttypes",<br>
+    "django.contrib.sessions",<br>
+    "django.contrib.messages",<br>
+   "django.contrib.staticfiles",<br>
+    "django.contrib.gis",<br>
+    "geowebapp",<br>
 ]
 `
 
