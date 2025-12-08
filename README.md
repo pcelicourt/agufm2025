@@ -19,14 +19,14 @@ $ cd geoweb
 $ python manage.py startapp geowebapp
 
 # In the settings.py file within the geoweb folder, add the following codes
-import os
+`import os
 
 from dotenv import load_dotenv
 
-load_dotenv(os.path.join(BASE_DIR, ".env"))
+load_dotenv(os.path.join(BASE_DIR, ".env"))`
 
 # Replace the variable INSTALLED_APPS with the following value
-INSTALLED_APPS = [
+`INSTALLED_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -35,19 +35,19 @@ INSTALLED_APPS = [
    "django.contrib.staticfiles",
     "django.contrib.gis",
     "geowebapp",
-]
+]`
 
 # Replace the variable DATABASES with the following value
-DATABASES = {
+`DATABASES = {
     "default": {
         "ENGINE": "django.contrib.gis.db.backends.postgis",
         "NAME": os.getenv("POSTGRES_DB", "mydb"),
         "USER": os.getenv("POSTGRES_USER", "postgres"),
         "PASSWORD": os.getenv("POSTGRES_PASSWORD", "postgres"),
-        "HOST": os.getenv("POSTGRES_HOST", "localhost"),  # or "db" when using Compose
+        "HOST": os.getenv("POSTGRES_HOST", "localhost"), 
         "PORT": os.getenv("POSTGRES_PORT", "5432"),
     }
-}
+}`
 
 # CodeSpaces Terminal
 $ python manage.py migrate
