@@ -1,7 +1,6 @@
-# agufm2025
-# Template for Geoinformatics workshop at AGU Fall Meeting 2025
+# Tutorial for the American Geophysical Union Fall Meeting 2025
 
-# Run the following commands to create a Django WebGIS Application in your terminal
+# Following the setup of the agufm25 template in CodeSpaces, run the following commands to create a Django WebGIS Application in your terminal
 
 # CodeSpaces Terminal
 $ source .venv/bin/activate
