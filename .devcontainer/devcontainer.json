@@ -7,7 +7,7 @@
     "python.defaultInterpreterPath": "/workspaces/${localWorkspaceFolderBasename}/.venv/bin/python",
     "editor.formatOnSave": true
   },
-  "postCreateCommand": "python -m venv .venv && . .venv/bin/activate && pip install --upgrade pip && pip install -r requirements.txt && sudo apt-get update",
+  "postCreateCommand": "python -m venv .venv && source .venv/bin/activate && pip install --upgrade pip && pip install -r requirements.txt && sudo apt-get update",
   "forwardPorts": [
     8000,
     5432
