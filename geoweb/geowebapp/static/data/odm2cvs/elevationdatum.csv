@@ -1,0 +1,7 @@
+term,name,definition,category,provenance,provenance_uri,note
+AHD,AHD,Australian Height Datum. Height datum used for standardised elevations across Australia. The datum surface is defined as that which passes through mean sea level at the 30 specified tide gauges and through points at zero AHD height vertically below the other basic junction points.,,See http://www.ga.gov.au/scientific-topics/positioning-navigation/geodesy/geodetic-datums/australian-height-datum-ahd,,
+EGM96,EGM96,EGM96 (Earth Gravitational Model 1996) is a geopotential model of the Earth consisting of spherical harmonic coefficients complete to degree and order 360.,,See https://en.wikipedia.org/wiki/EGM96,,
+MSL,MSL,Mean Sea Level,,Originally from CUAHSI HIS ODM CV. See http://his.cuahsi.org/mastercvreg/edit_cv11.aspx?tbl=VerticalDatumCV.,,
+NAVD88,NAVD88,North American Vertical Datum of 1988,,Originally from CUAHSI HIS ODM CV. See http://his.cuahsi.org/mastercvreg/edit_cv11.aspx?tbl=VerticalDatumCV.,,
+NGVD29,NGVD29,National Geodetic Vertical Datum of 1929,,Originally from CUAHSI HIS ODM CV. See http://his.cuahsi.org/mastercvreg/edit_cv11.aspx?tbl=VerticalDatumCV.,,
+Unknown,Unknown,The vertical datum is unknown,,Originally from CUAHSI HIS ODM CV. See http://his.cuahsi.org/mastercvreg/edit_cv11.aspx?tbl=VerticalDatumCV.,,

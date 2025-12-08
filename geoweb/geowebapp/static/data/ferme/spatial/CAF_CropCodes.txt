@@ -1,0 +1,1 @@
+Code	CropFallow	no cropSB	spring barleySC	spring canolaSL	spring legume (chickpea)SP	spring peaSW	spring wheatWB	winter barleyWC	winter canolaWL	winter legume (chickpea)WT	winter triticaleWW	winter wheat

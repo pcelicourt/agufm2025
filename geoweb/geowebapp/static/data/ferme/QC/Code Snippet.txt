@@ -1,0 +1,208 @@
+### The following script was prepared to screen and flag soil sensor data for anomalies based upon: 
+### Dorigo, W.A., Wagner, W., Hohensinn, R., Hahn, S., Paulik, C., Xaver, A., Gruber, A., Drusch, M., Mecklenburg, S., Oevelen, P. 
+### van, others, 2011. The International Soil Moisture Network: a data hosting facility for global in situ soil moisture measurements. 
+### Hydrology and Earth System Sciences 15, 1675-1698. ### Dorigo, W.A., Xaver, A., Vreugdenhil, M., Gruber, A., Hegyiová, A., Sanchis-Dufau, A.D., Zamojski, D., Cordes, C., Wagner, W., 
+### Drusch, M., 2013. Global automated quality control of in situ soil moisture data from the International Soil Moisture Network. 
+### Vadose Zone Journal 12. 
+
+### The script is implemented in R.
+
+###############  defining derivative function to be used for spikes, breaks and constant values
+
+# function to perform first order CENTERED finite difference
+fderiv <- function(x){     
+  deriv <- (tail(x,-2)-head(x,-2))/2  
+  deriv <- c(NA,deriv,NA)  # to get a vector of the same length as x
+  # this performs [x(t+1) - x(t-1)]/2 for all the elements except the first and last element in the vector x 
+} 
+
+# function to perform second order CENTERED finite difference
+sderiv <-function(x){
+  deriv <- (tail(x,-2)-2*(tail(head(x,-1),-1))+head(x,-2))/4
+  deriv <- c(NA,deriv,NA)  # to get a vector of the same length as x
+  # this performs [x(t+1)-2*x(t)+x(t-1)]/4 for all the elements except the first and last element in the vector x
+}
+
+################# MISSING DATA - flagging missing data as "M"
+
+miss<-pnts
+miss$VW_30cm[is.na(miss$VW_30cm)]  <-"M"
+miss$VW_60cm[is.na(miss$VW_60cm)]  <-"M"
+miss$VW_90cm[is.na(miss$VW_90cm)]  <-"M"
+miss$VW_120cm[is.na(miss$VW_120cm)]<-"M"
+miss$VW_150cm[is.na(miss$VW_150cm)]<-"M"
+miss$T_30cm[is.na(miss$T_30cm)]    <-"M"
+miss$T_60cm[is.na(miss$T_60cm)]    <-"M"
+miss$T_90cm[is.na(miss$T_90cm)]    <-"M"
+miss$T_120cm[is.na(miss$T_120cm)]  <-"M"
+miss$T_150cm[is.na(miss$T_150cm)]  <-"M"
+
+############## OUT OF RANGE DATA for moisture - flagging data as "C"
+#              TEMPERATURE less than zero     - flaggind data as "D"
+
+# range for soil moisture is conisdered as 0-0.6 m3/m3 and in Dorigo et al.(2011b)
+
+range <- pnts
+range$VW_30cm[range$VW_30cm<0 | range$VW_30cm>0.6]  <- "C"
+range$VW_60cm[range$VW_60cm<0 | range$VW_60cm>0.6]  <- "C"
+range$VW_90cm[range$VW_90cm<0 | range$VW_90cm>0.6]  <- "C"
+range$VW_120cm[range$VW_120cm<0 | range$VW_120cm>0.6]  <- "C"
+range$VW_150cm[range$VW_150cm<0 | range$VW_150cm>0.6]  <- "C"
+
+
+## Soil Temperature less than zero is flagged as Dubious
+range$T_30cm[range$T_30cm< 0 ]  <- "D"          
+range$T_60cm[range$T_60cm< 0 ]  <- "D"
+range$T_90cm[range$T_90cm< 0 ]  <- "D"
+range$T_120cm[range$T_120cm< 0 ]  <- "D"
+range$T_150cm[range$T_150cm< 0 ]  <- "D"
+
+######## Flatlines (plateaus)  
+
+# working with hourly data
+
+# For a period of 24 hour interval, if the variance of soil moisture value is not greater than 1%
+# of the variance of the sensor (0.05 m3/m3), we flag it as a flatline or plateau, which is not
+# affected by regular wetting or a spike
+
+flats <- pnts2
+
+flats[with(flats, order("Location","Date","Time"))]
+
+flats$var.30<-rollapply(flats$VW_30cm,width=24,FUN=var,fill=NA)
+flats$VW_30cm[flats$var.30<=0.0005]<-"D"
+
+flats$var.60<-rollapply(flats$VW_60cm,width=24,FUN=var,fill=NA)
+flats$VW_60cm[flats$var.60<=0.0005]<-"D"
+
+flats$var.90<-rollapply(flats$VW_90cm,width=24,FUN=var,fill=NA)
+flats$VW_90cm[flats$var.90<=0.0005]<-"D"
+
+flats$var.120<-rollapply(flats$VW_120cm,width=24,FUN=var,fill=NA)
+flats$VW_120cm[flats$var.120<=0.0005]<-"D"
+
+flats$var.150<-rollapply(flats$VW_150cm,width=24,FUN=var,fill=NA)
+flats$VW_150cm[flats$var.150<=0.0005]<-"D"
+
+flats[with(flats, order("Location","Date","Time"))]
+
+################################## SPIKES - flagging as "D'" if the three criteria are met
+
+# functions to determine the spike criterion in the dataset
+# criteria : 1.  x(t+1)/x(t) <0.85 or x(t+1)/x(t) >1.15
+#            2.  0.8 < |x"(t-1)/x"(t+1)| <1.2
+#            3.  | Variance(x(t-12),x(t+12))/mean(x(t-12),x(t+12)) | < 1    (exclude x(t) in the calculations)      
+
+spike1 <- function(x){        # function for 1st criteria of spike
+  one <- tail(x,-1)/head(x,-1)  #  doesnt determine the spike in the first reading  
+  one <- c(NA,one)              
+  one >1.15 | one<0.85 
+}
+
+spike2 <- function(x){        # function for 2nd criteria of spike
+  two <- abs(tail(sderiv(x),-2)/head(sderiv(x),-2))
+  two <-c(NA,two,NA)            # doesn't determine the spike for the first two and last two readings
+  two >0.8 & two < 1.2 
+}
+
+## ***** x should have length of atleast 25 
+spike3 <- function(x) {     # function for 3rd criteria of spike 
+  three <- vector(mode="integer",length(x)) + 2  
+  start = 13                                     # we don't detect the spikes for first 12 and last 12 elements
+  end = length(x)-12                             
+  for(i in start:end){
+    inter <- x[(i-12):(i+12)]
+    inter <- c(head(inter,12),tail(inter,12))    # interval of (x[t-12],x[t+12]) without x[t] 
+    three[i]<- abs(var(inter)/mean(inter))
+  }
+  three < 1
+} 
+
+# function to determine spikes in moisture values that uses function spikeone, spiketwo and spike three
+
+findspike <- function(x){
+  spike1(x)&spike2(x)&spike3(x)
+}
+
+#####  determining the spikes in the data using the above functions
+spikes <- pnts2
+spikes[with(spikes, order("Location","Date","Time"))]
+
+spikes$sp.30 <- findspike(spikes$VW_30cm)
+spikes$sp.60 <- findspike(spikes$VW_60cm)
+spikes$sp.90 <- findspike(spikes$VW_90cm)
+spikes$sp.120 <- findspike(spikes$VW_120cm)
+spikes$sp.150 <- findspike(spikes$VW_150cm)
+
+
+spikes$VW_30cm[spikes$sp.30==TRUE] <- "D" 
+spikes$VW_60cm[spikes$sp.60==TRUE] <- "D" 
+spikes$VW_90cm[spikes$sp.90==TRUE] <- "D" 
+spikes$VW_120cm[spikes$sp.120==TRUE] <- "D" 
+spikes$VW_150cm[spikes$sp.150==TRUE] <- "D" 
+
+######################## BREAKS - flaggin them as "D"
+
+# functions to determine the breaks in the dataset
+# criteria : 1.  |(x[t]-x[t-1])/ x[t] | > 0.1  and |x[t]-x[t-1]|>0.01
+#            2.  x'[t]>10*(1/n)*(x'[t-12]+....+x'[t+12])
+#            3.  ||x"[t]/x[t+1]|| = 1 and |x"[t+1]/x"[t+2]| >10
+
+
+break1 <- function(x) {    # function for criteria 1 of break detection. doesn't consider the first point
+  one1 <-abs((tail(x,-1)-head(x,-1)))/tail(x,-1)    # this is the first equation of the criteria 1
+  one2 <-abs(tail(x,-1)-head(x,-1))                 # this is the second equation of the criteria 1
+  one1 <-c(NA,one1)           # to get the vector of length equal to length(x)
+  one2 <-c(NA,one2)
+  one1 >0.1 & one2>0.01
+} 
+
+break2 <- function(x) {   # function for criteria 2 of break detection
+  two1<- fderiv(x)        # finding the first derivatives
+  two2<- vector(mode="integer",length(x))   # vector to store the values of 10*(1/n)*(x'[t-12]+...+x'[t+12])
+  n<-24                     # we are considering n=24
+  start = 13                # ignore the first 12 since we are considering over a 24 hr period centering at x[t]
+  end = length(x)-12        # we go the 12th last observation
+  
+  for(i in start:end){
+    inter<-two1[(i-12):(i+12)]
+    two2[i]<-10*(1/n)*sum(inter)
+  }
+  two2[c(1:12,(length(x)-12):(length(x)))]<-NA      # making first 12 and last 12 values as NA since
+  two1>two2                                       # this doesnt consider the first 13 values and last 12 values
+}
+
+break3 <- function(x){   # function for criteria 3 of break detection
+  three1 <- abs(head(x,-1)/tail(x,-1))   # values for the first equation in the criteria 3
+  three1 <- c(three1,NA)                 # doesnt consider the last two terms
+  three2 <- tail(three1,-1)             # values for the second equation in the criteria 3  
+  three2 <- c(three2,NA)
+  three1 == 1 & three2 >10
+  
+}
+
+findbreak<-function(x){
+  break1(x)&break2(x)&break3(x)
+}
+
+##### determining breaks in the moisture data using the above functions
+
+breaks <- pnts2
+breaks[with(breaks, order("Location","Date","Time"))]
+
+breaks$b.30 <- findbreak(breaks$VW_30cm)
+breaks$b.60 <- findbreak(breaks$VW_60cm)
+breaks$b.90 <- findbreak(breaks$VW_90cm)
+breaks$b.120 <- findbreak(breaks$VW_120cm)
+breaks$b.150 <- findbreak(breaks$VW_150cm)
+
+breaks$VW_30cm[breaks$b.30==TRUE] <- "D"        # flagging 
+breaks$VW_60cm[breaks$b.60==TRUE] <- "D" 
+breaks$VW_90cm[breaks$b.90==TRUE] <- "D" 
+breaks$VW_120cm[breaks$b.120==TRUE] <- "D" 
+breaks$VW_150cm[breaks$b.150==TRUE] <- "D" 
+
+## end
+
+
+

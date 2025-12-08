@@ -1,0 +1,222 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home Detail - Interactive Map</title>
+
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+
+    <style>
+        /* Style de la barre de navigation */
+        .navbar {
+            background-color: #333;
+            overflow: hidden;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            padding: 10px 0;
+        }
+
+        .navbar a {
+            float: left;
+            display: block;
+            color: white;
+            text-align: center;
+            padding: 14px 20px;
+            text-decoration: none;
+            font-size: 17px;
+        }
+
+        .navbar a:hover {
+            background-color: #575757;
+            color: white;
+        }
+
+        /* Style du bouton Home */
+        .navbar .home-button {
+            float: right;
+            background-color: #ffa500;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            text-decoration: none;
+            font-size: 16px;
+            border-radius: 5px;
+        }
+
+        .navbar .home-button:hover {
+            background-color: #e69500;
+        }
+
+        /* Style de la barre de navigation latérale */
+        .sidebar {
+            height: 100%;
+            width: 250px;
+            position: fixed;
+            top: 60px; /* Ajusté pour ne pas chevaucher la navbar */
+            left: 0;
+            background-color: #f8f9fa;
+            padding: 20px;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            z-index: 900;
+        }
+
+        .sidebar h2 {
+            margin-top: 0;
+            font-size: 20px;
+        }
+
+        .sidebar label {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .sidebar select, .sidebar button {
+            padding: 10px;
+            margin-bottom: 20px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .sidebar button {
+            background-color: #ffa500;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .sidebar button:hover {
+            background-color: #e69500;
+        }
+
+        /* Style du conteneur principal pour inclure la carte */
+        .main-content {
+            margin-left: 270px; /* Largeur de la barre latérale + un peu de marge */
+            margin-top: 70px; /* Espace pour la navbar */
+            padding: 20px;
+        }
+
+        /* Style du footer */
+        footer {
+            margin-top: 20px;
+            padding: 20px 0;
+            background-color: #f8f9fa;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <!-- Barre de navigation supérieure -->
+    <div class="navbar">
+        <a href="{% url 'home' %}">Home</a>
+        <a href="#">Projection Results</a>
+        <a href="#">About Us</a>
+    </div>
+
+    <!-- Barre de navigation latérale -->
+    <div class="sidebar">
+        <h2>Projection Settings</h2>
+        <div>
+            <label for="region">Echelles Spatiales:</label>
+            <select id="city-select">
+                {% for feature in features %}
+                    <option value="{{ feature }}">{{ feature }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div>
+            <label for="horizon-select">Projection Horizon:</label>
+            <select id="horizon-select">
+                <option value="2025">2025</option>
+                <option value="2050">2050</option>
+                <option value="2075">2075</option>
+                <option value="2100">2100</option>
+            </select>
+        </div>
+        <div>
+            <label for="scenario-select">Climate Scenario:</label>
+            <select id="scenario-select">
+                <option value="rcp4.5">RCP 4.5</option>
+                <option value="rcp8.5">RCP 8.5</option>
+            </select>
+        </div>
+        <button id="apply-settings">Apply Settings</button>
+    </div>
+
+    <!-- Conteneur principal -->
+    <div class="main-content">
+        <header>
+            <h1>Bienvenue au Système d'Information de la Cook Agronomy Farm</h1>
+            <p>Explorez les données agricoles publiées par le Prof. David Brown de la Washington State University.</p>
+        </header>
+        <main>
+            <div id="map" style="width: 100%; height: 900px;"></div> <!-- Conteneur de la carte -->
+        </main>
+        <footer>
+            <p>&copy; 2025 @WSU. All rights reserved.</p>
+            <div style="float:right">
+                <a href="#">Contact Us</a> | <a href="#">Privacy Policy</a>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Leaflet JavaScript -->
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/proj4js/2.12.1/proj4.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/proj4leaflet/1.0.2/proj4leaflet.js"></script>
+    <!-- Script pour initialiser la carte et gérer le GeoJSON -->
+    <script>
+        //affichage d'une carte de fond dans le système de coordonnées projetées EPSG 3857 (Spherical Web Mercator)
+        var map = L.map('map', {
+                crs: L.CRS.EPSG3857,
+                maxZoom: 18,
+                minZoom: 5,
+                }).setView([46.8139, -71.2082], 1);
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+
+        //Accès au données geospatiales délimitant les échelles spatiales d'intérêt
+        var geojsonData = '{{geojson_data|safe}}';
+
+        // Ajouter les échelles spatiales d'intérêt structurées suivant le format GeoJSON
+        L.Proj.geoJson(JSON.parse(geojsonData.toString())).addTo(map);
+
+        // Locations des villes avec besoins en eau actuels
+        var locations = {
+            "quebec": {lat: 46.8139, lon: -71.2082, name: 'Quebec City', water_need: '500,000 cubic meters'},
+            "montreal": {lat: 45.5017, lon: -73.5673, name: 'Montreal', water_need: '750,000 cubic meters'},
+            "saguenay": {lat: 48.4284, lon: -71.0647, name: 'Saguenay', water_need: '600,000 cubic meters'}
+        };
+
+        function updateMap() {
+            var selectedCity = document.getElementById('city-select').value;
+            var location = locations[selectedCity];
+
+            map.setView([location.lat, location.lon], 10);
+            L.marker([location.lat, location.lon]).addTo(map)
+                .bindPopup(location.name + '<br>Current water needs: ' + location.water_need);
+        }
+
+        var dashedStyle = {
+            weight: 2,
+            opacity: 1,
+            fillOpacity: 0,
+            color: 'black',
+            dashArray: '3'
+        };
+        document.getElementById('apply-settings').addEventListener('click', updateMap);
+    </script>
+</body>
+</html>
