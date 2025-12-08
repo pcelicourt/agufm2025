@@ -5,6 +5,7 @@
 venv/
 ENV/
 env/
+.env
 */site-packages/
 */dist-packages/
 
