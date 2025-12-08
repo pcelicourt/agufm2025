@@ -29,5 +29,8 @@
       ]
     }
   },
+  "mounts": [
+  "source=devcontainer-postgres-data,target=/var/lib/postgresql/data,type=volume"
+],
   "remoteUser": "vscode"
 }
