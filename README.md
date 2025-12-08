@@ -33,7 +33,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
    "django.contrib.staticfiles",
-    "django.contrib.gis", #explanation here
+    "django.contrib.gis",
     "geowebapp",
 ]
 
