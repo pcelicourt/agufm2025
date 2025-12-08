@@ -5,8 +5,22 @@
     "python.defaultInterpreterPath": "/workspaces/${localWorkspaceFolderBasename}/.venv/bin/python",
     "editor.formatOnSave": true
   },
-  "postCreateCommand": "python -m venv .venv && source .venv/bin/activate && pip install --upgrade pip && sudo apt-get update && sudo apt-get install -y --no-install-recommends libgdal-dev python3-gdal libsqlite3-mod-spatialite && pip install -r requirements.txt",
-  "forwardPorts": [8000],
+  "postCreateCommand": "python -m venv .venv && . .venv/bin/activate && pip install --upgrade pip && sudo apt-get update && sudo apt-get install -y libgdal-dev python3-gdal libsqlite3-mod-spatialite libspatialite-dev && sudo apt-get update && sudo apt-get install -y postgis postgresql-16-postgis-3 && pip install -r requirements.txt",
+  "forwardPorts": [8000, 5432],
+	"portsAttributes": {
+		"5432": {"label": "PostgreSQL port", "onAutoForward": "silent"}
+	},
+"features": {
+    "ghcr.io/devcontainers/features/postgres:1": {
+      "version": "16",        // Postgres major version
+      "password": "agufm2025", // set to anything; DO NOT ship secrets in public repos
+      "db": "agufmDB",           // optional default database
+      "user": "agufm2025"      // role created with superuser privileges
+    }
+  },
+"mounts": [
+  "source=devcontainer-postgres-data,target=/var/lib/postgresql/data,type=volume"
+],
   "customizations": {
     "vscode": {
       "extensions": [
