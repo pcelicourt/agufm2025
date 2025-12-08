@@ -5,6 +5,10 @@ DB_NAME="agufmdb"
 DB_USER="agufm2025"
 DB_PASSWORD="agufm2025"
 
+echo "Installing PostgreSQL client..."
+sudo apt-get update 
+sudo apt-get install -y postgresql-client
+
 echo "Starting PostgreSQL service..."
 sudo service postgresql start
 
