@@ -3,6 +3,7 @@ Template for Geoinformatics workshop at AGU Fall Meeting 2025
 
 Run the following commands to create a Django WebGIS Application in your terminal
 
+#CodeSpaces Terminal
 $ source .venv/bin/activate
 
 $ python --version
@@ -16,6 +17,12 @@ cd geoweb
 python manage.py startapp geowebapp
 
 #settings.py
+
+from dotenv import load_dotenv
+BASE_DIR = Path(__file__).resolve().parent.parent
+load_dotenv(os.path.join(BASE_DIR, ".env"))
+
+
 INSTALLED_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",
@@ -39,5 +46,6 @@ DATABASES = {
     }
 }
 
+#CodeSpaces Terminal
 $ python manage.py migrate
 $ python manage.py runserver
