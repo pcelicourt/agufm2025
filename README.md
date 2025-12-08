@@ -53,6 +53,6 @@ DATABASES = {
 }
 `
 
-# CodeSpaces Terminal
+# Run these commands in the CodeSpaces Terminal
 $ python manage.py migrate
 $ python manage.py runserver
