@@ -1,8 +1,6 @@
 # Tutorial for the American Geophysical Union Fall Meeting 2025
 
 # Following the setup of the agufm25 template in CodeSpaces, run the following commands to create a Django WebGIS Application in your terminal
-
-# In the CodeSpaces Terminal, run the following commands
 $ source .venv/bin/activate
 
 $ python --version
