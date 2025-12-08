@@ -19,10 +19,8 @@ $ cd geoweb
 $ python manage.py startapp geowebapp
 
 # In the settings.py file within the geoweb folder, add the following codes
-
+import os
 from dotenv import load_dotenv
-
-BASE_DIR = Path(__file__).resolve().parent.parent
 
 load_dotenv(os.path.join(BASE_DIR, ".env"))
 
@@ -30,7 +28,7 @@ load_dotenv(os.path.join(BASE_DIR, ".env"))
 INSTALLED_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",
- "django.contrib.contenttypes",
+    "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
    "django.contrib.staticfiles",
