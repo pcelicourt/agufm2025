@@ -12,7 +12,7 @@ $ python -m django --version
 # Still in the terminal, run the following commands to create a Django Project with name geoweb
 $ django-admin startproject geoweb
 
-# Change to the newly created directory
+# Change to the newly created directory geoweb
 $ cd geoweb
 
 # Still in the terminal, run the following commands to create a Django App with name geowebapp
