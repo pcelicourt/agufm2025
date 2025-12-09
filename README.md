@@ -50,5 +50,8 @@ python manage.py makemigrations
 python manage.py migrate
 ```
 ## 6. Check the results
-In the Codespace terminal, content similar to the image should be printed.
+In the Codespace terminal, content similar to the image should be printed for command 'python manage.py makemigrations'.
 ![Django Successful Migrations](https://github.com/pcelicourt/aguassets/raw/main/images/odm2migration.png)
+
+In the Codespace terminal, content similar to the image should be printed for command 'python manage.py migrates'.
+![Django Successful Migrations](https://github.com/pcelicourt/aguassets/raw/main/images/initialmigration.png)
