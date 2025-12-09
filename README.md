@@ -1,33 +1,52 @@
-# Tutorial for the American Geophysical Union Fall Meeting 2025
+# Tutorial \#2 for the American Geophysical Union Fall Meeting 2025
+This tutorial will help you prepare the DB for the next step, which is the loading of the spatial and timeseries data into the DB
 
-# Following the setup of the agufm25 template in CodeSpaces, run the following commands to create a Django WebGIS Application in your terminal
+## 1. Connect to your existing account
 
-# CodeSpaces Terminal
-$ source .venv/bin/activate
+- [GitHub Sign in](https://github.com/login?)
 
-$ python --version
+## 2. Access the workshop GitHub repository
 
-$ python -m django --version
+Click the following link to open the workshop repository: [AGUFM 2025 Workshop GitHub Repo](https://github.com/pcelicourt/agufm2025/tree/geodjangoapp).
 
+## 3. Create a codespace from the branch geodjangoapp
 
-## Change to the newly created directory geoweb
-$ cd geoweb
+With the branch geodjangoapp selected in the agufm202 repo, click the + sign to create a codespace from the branch as demonstrated in the image below:
 
+![Launch CodeSpace](https://github.com/pcelicourt/aguassets/raw/main/images/geodjangosetupinit.png)
 
+## 4. Codespace development environment
 
-# In the settings.py file within the geoweb folder
+Your Codespace development environment should look similar to this:
 
+![CodeSpace Terminal](https://github.com/pcelicourt/aguassets/raw/main/images/geodjangosetupinterface.png)
 
-# Check the models.py module
+## 5. Continue the Django WebGIS Application development
+In the Codespace terminal, run the following commands.
 
+### 5.1. Verify Python and Django versions in the Codespace terminal
 
-# CodeSpaces Terminal: Run the following command to launch the Django application
-$ cd geoweb
-$ python manage.py migrate
-$ python manage.py runserver
+```bash
+source .venv/bin/activate
+python --version
+pip install -r requirements.txt
+python -m django --version
+```
 
+### 5.3. Change into the `geoweb` directory
+Note that you must execute the following commands containing 'python -m manage ...' or 'python manage.py ...' within the geoweb folder.
 
-# The Model
-## With the module models.py populated, run the following commands to populate the DB
-$ python manage.py makemigrations
-$ python manage.py migrate
+```bash
+cd geoweb
+```
+
+## 5.4 Check the Model, run migrations and start the development server
+
+In the Codespace terminal, you can check the content of the Model component (models.py) with the geowebapp folder. Then, run the following commands in the terminal.
+The first command will convert the ODM2 classes defined in models.py into a migration file that the second command will load into the DB.
+
+```bash
+python manage.py makemigrations
+python manage.py migrate
+python manage.py runserver
+```
