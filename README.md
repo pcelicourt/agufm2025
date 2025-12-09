@@ -63,7 +63,7 @@ from dotenv import load_dotenv
 from ctypes.util import find_library
 ```
 
-### 6.2. Add this instruction AFTER the variable BASE_DIR
+### 6.2. Add this instruction **after** the variable BASE_DIR
 
 ```python
 load_dotenv(os.path.join(BASE_DIR, ".env"))
