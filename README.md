@@ -51,6 +51,24 @@ DATABASES = {
     }
 }
 `
+
+`
+TEMPLATES = [
+    {
+        "BACKEND": "django.template.backends.django.DjangoTemplates",
+        "DIRS": [BASE_DIR / "geowebapp/static/templates"],
+        "APP_DIRS": True,
+        "OPTIONS": {
+            "context_processors": [
+                "django.template.context_processors.debug",
+                "django.template.context_processors.request",
+                "django.contrib.auth.context_processors.auth",
+                "django.contrib.messages.context_processors.messages",
+            ],
+        },
+    },
+]
+`
 ## Add these codes at the end of the file settings.py
 `
 GDAL_LIBRARY_PATH = find_library("gdal")

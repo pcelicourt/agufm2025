@@ -62,7 +62,7 @@ def load_parcels_polygon_data(apps, schema_editor):
         parcel_code = parcel.Strip
         field_code = parcel.Field
         # to convert the Geometry type to match the CV in the ODM
-        geotype = parcel.geom_type
+        geotype = parcel.geometry.type[0]
         samplingfeaturegeotypecv = CV_SamplingFeatureGeoType.objects.filter(
             term=geotype[0].lower() + geotype[1:]
         ).first()

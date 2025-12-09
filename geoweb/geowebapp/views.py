@@ -97,47 +97,88 @@ class MainView(TemplateView):
         for parcelle in parcelles:  # sensor.objects.all()
             wkt = load_wkt(parcelle.featuregeometrywkt)
 
-            parcelles_fg.add_child(folium.Polygon(
-                locations=list(t.transform(coord[0], coord[1])
-                               for coord in wkt.exterior.coords),
-                smooth_factor=4,
-                no_clip=True,
-                popup=parcelle.samplingfeaturename,
-                tooltip=parcelle.samplingfeaturedescription,
-                icon=folium.Icon(icon='fa-flag', prefix='fa')
-            )
-            )
+            # Handle both Polygon and MultiPolygon
+            if wkt.geom_type == 'MultiPolygon':
+                for poly in wkt.geoms:
+                    parcelles_fg.add_child(folium.Polygon(
+                        locations=list(t.transform(coord[0], coord[1])
+                                       for coord in poly.exterior.coords),
+                        smooth_factor=4,
+                        no_clip=True,
+                        popup=parcelle.samplingfeaturename,
+                        tooltip=parcelle.samplingfeaturedescription,
+                        icon=folium.Icon(icon='fa-flag', prefix='fa')
+                    ))
+            else:
+                parcelles_fg.add_child(folium.Polygon(
+                    locations=list(t.transform(coord[0], coord[1])
+                                   for coord in wkt.exterior.coords),
+                    smooth_factor=4,
+                    no_clip=True,
+                    popup=parcelle.samplingfeaturename,
+                    tooltip=parcelle.samplingfeaturedescription,
+                    icon=folium.Icon(icon='fa-flag', prefix='fa')
+                ))
 
         for champ in champs:  # sensor.objects.all()
             wkt = load_wkt(champ.featuregeometrywkt)
 
-            champs_fg.add_child(folium.Polygon(
-                locations=list(t.transform(coord[0], coord[1])
-                               for coord in wkt.exterior.coords),
-                smooth_factor=4,
-                no_clip=True,
-                popup=champ.samplingfeaturename,
-                tooltip=champ.samplingfeaturedescription,
-                icon=folium.Icon(icon='fa-flag', prefix='fa')
-            )
-            )
+            # Handle both Polygon and MultiPolygon
+            if wkt.geom_type == 'MultiPolygon':
+                for poly in wkt.geoms:
+                    champs_fg.add_child(folium.Polygon(
+                        locations=list(t.transform(coord[0], coord[1])
+                                       for coord in poly.exterior.coords),
+                        smooth_factor=4,
+                        no_clip=True,
+                        popup=champ.samplingfeaturename,
+                        tooltip=champ.samplingfeaturedescription,
+                        icon=folium.Icon(icon='fa-flag', prefix='fa')
+                    ))
+            else:
+                champs_fg.add_child(folium.Polygon(
+                    locations=list(t.transform(coord[0], coord[1])
+                                   for coord in wkt.exterior.coords),
+                    smooth_factor=4,
+                    no_clip=True,
+                    popup=champ.samplingfeaturename,
+                    tooltip=champ.samplingfeaturedescription,
+                    icon=folium.Icon(icon='fa-flag', prefix='fa')
+                ))
 
         for ferme in fermes:  # sensor.objects.all()
             wkt = load_wkt(ferme.featuregeometrywkt)
 
-            fermes_fg.add_child(folium.Polygon(
-                locations=list(t.transform(coord[0], coord[1])
-                               for coord in wkt.exterior.coords),
-                smooth_factor=4,
-                no_clip=True,
-                popup=ferme.samplingfeaturename,
-                tooltip=ferme.samplingfeaturedescription,
-                icon=folium.Icon(icon='fa-flag', prefix='fa')
-            )
-            )
+            # Handle both Polygon and MultiPolygon
+            if wkt.geom_type == 'MultiPolygon':
+                for poly in wkt.geoms:
+                    fermes_fg.add_child(folium.Polygon(
+                        locations=list(t.transform(coord[0], coord[1])
+                                       for coord in poly.exterior.coords),
+                        smooth_factor=4,
+                        no_clip=True,
+                        popup=ferme.samplingfeaturename,
+                        tooltip=ferme.samplingfeaturedescription,
+                        icon=folium.Icon(icon='fa-flag', prefix='fa')
+                    ))
+            else:
+                fermes_fg.add_child(folium.Polygon(
+                    locations=list(t.transform(coord[0], coord[1])
+                                   for coord in wkt.exterior.coords),
+                    smooth_factor=4,
+                    no_clip=True,
+                    popup=ferme.samplingfeaturename,
+                    tooltip=ferme.samplingfeaturedescription,
+                    icon=folium.Icon(icon='fa-flag', prefix='fa')
+                ))
+                smooth_factor = 4,
+                no_clip = True,
+                popup = ferme.samplingfeaturename,
+                tooltip = ferme.samplingfeaturedescription,
+                icon = folium.Icon(icon='fa-flag', prefix='fa')
 
         # Modify Marker template to include the onClick event
-        click_template = """{% macro script(this, kwargs) %}
+        click_template= """{% macro script(this, kwargs) %}
                             var {{ this.get_name() }} = L.marker(
                                 {{ this.location|tojson }},
                                 {{ this.options|tojson }}
@@ -145,11 +186,11 @@ class MainView(TemplateView):
                            {% endmacro %}
                         """
         # Change template to custom template
-        Marker._template = Template(click_template)
-        _ = _map._repr_html_()
-        event_handler = folium.JavascriptLink('./static/js/eventhandler.js')
+        Marker._template= Template(click_template)
+        _= _map._repr_html_()
+        event_handler= folium.JavascriptLink('./static/js/eventhandler.js')
 
-        plotly_js = "https://cdn.plot.ly/plotly-3.0.1.min.js"
+        plotly_js= "https://cdn.plot.ly/plotly-3.0.1.min.js"
         _map.get_root().html.add_child(folium.JavascriptLink(plotly_js))
         _map.get_root().html.add_child(event_handler)
 
@@ -161,6 +202,6 @@ class MainView(TemplateView):
         # LayerControl object to control display of layers, must be added last to the map.
         _map.add_child(folium.LayerControl())
 
-        sensors_json = JsonResponse(
+        sensors_json= JsonResponse(
             SamplingFeaturesSerializers(sensors, many=True).data).content
         return {"map": figure._repr_html_(), 'title': 'Cook Agronomy Farm', 'sensors': sensors_json}
