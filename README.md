@@ -29,6 +29,7 @@ In the Codespace terminal, run the following commands.
 ```bash
 source .venv/bin/activate
 python --version
+pip install -r requirements.txt
 python -m django --version
 ```
 
