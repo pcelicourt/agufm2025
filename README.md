@@ -60,11 +60,15 @@ Open the `settings.py` file inside the `geoweb` folder and make the following ch
 ```python
 import os
 from dotenv import load_dotenv
-load_dotenv(os.path.join(BASE_DIR, ".env"))
 from ctypes.util import find_library
 ```
 
-### 6.2. Replace the `INSTALLED_APPS` variable with:
+### 6.2. Add this instruction AFTER the variable BASE_DIR
+
+```python
+load_dotenv(os.path.join(BASE_DIR, ".env"))
+```
+### 6.3. Replace the `INSTALLED_APPS` variable with:
 
 ```python
 INSTALLED_APPS = [
@@ -79,7 +83,7 @@ INSTALLED_APPS = [
 ]
 ```
 
-### 6.3. Replace the `DATABASES` variable with:
+### 6.4. Replace the `DATABASES` variable with:
 
 ```python
 DATABASES = {
@@ -90,7 +94,7 @@ DATABASES = {
 }
 ```
 
-### 6.4. Replace the `TEMPLATES` variable with:
+### 6.5. Replace the `TEMPLATES` variable with:
 
 ```python
 TEMPLATES = [
@@ -110,7 +114,7 @@ TEMPLATES = [
 ]
 ```
 
-### 6.5. Add the following variables at the end of `settings.py`:
+### 6.6. Add the following variables at the end of `settings.py`:
 
 ```python
 GDAL_LIBRARY_PATH = find_library("gdal")
