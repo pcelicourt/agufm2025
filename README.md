@@ -131,3 +131,6 @@ python manage.py migrate
 python manage.py runserver
 ```
 
+## 8. Visualize the development server
+The result should look like this:
+![Django Successful Launch](https://github.com/pcelicourt/aguassets/raw/main/images/djangosuccessfullaunch.png)
