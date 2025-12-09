@@ -7,9 +7,7 @@
 
 ## 2. Access the workshop GitHub repository
 
-Click the link below to open the workshop repository:
-
-[AGUFM 2025 Workshop GitHub Repo](https://github.com/pcelicourt/agufm2025)
+Click the link below to open the workshop repository: [AGUFM 2025 Workshop GitHub Repo](https://github.com/pcelicourt/agufm2025)
 
 ## 3. Open the repo in a Codespace
 
