@@ -48,5 +48,7 @@ The first command will convert the ODM2 classes defined in models.py into a migr
 ```bash
 python manage.py makemigrations
 python manage.py migrate
-python manage.py runserver
 ```
+## 6. Check the results
+In the Codespace terminal, content similar to the image should be printed.
+![Django Successful Migrations](https://github.com/pcelicourt/aguassets/raw/main/images/odm2migration.png)
