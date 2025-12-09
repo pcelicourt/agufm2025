@@ -40,13 +40,20 @@ Note that you must execute the following commands containing 'python -m manage .
 cd geoweb
 ```
 
-## 5.4 Check and run migrations and start the development server
+## 5.4 Check and run migrations 
 
 In the Codespace terminal, you can check the content of the migrations files with the geoweb/geowebapp/migrations/ folder. Then, run the following command in the terminal.
 
 ```bash
 python manage.py migrate
 ```
-## 6. Check the results
+## 6. Check the results and start the development server
 In the Codespace terminal, content similar to the image should be printed for command 'python manage.py migrates'.
 ![Django Successful Migrations](https://github.com/pcelicourt/aguassets/raw/main/images/initialmigration.png)
+
+Run the following to start the development server:
+```bash
+python manage.py runserver
+```
+If successful, your interface shoud look like:
+![Django WebGIS Successful Launch](https://github.com/pcelicourt/aguassets/raw/main/images/dataloadedinterface.png)
