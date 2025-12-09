@@ -1,4 +1,4 @@
-# Tutorial for the American Geophysical Union Fall Meeting 2025
+# Tutorial \#1 for the American Geophysical Union Fall Meeting 2025
 
 ## 1. Create a GitHub account or connect to an existing account
 
