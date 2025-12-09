@@ -22,10 +22,9 @@ Your Codespace development environment should look similar to this:
 ![CodeSpace Terminal](https://github.com/pcelicourt/aguassets/raw/main/images/codespacesetup.png)
 
 ## 5. Creation of a Django WebGIS Application
+In the Codespace terminal, run the following commands.
 
-### 5.1. Verify Python and Django in the Codespace terminal
-
-In the Codespace terminal, run the following commands:
+### 5.1. Verify Python and Django versions in the Codespace terminal
 
 ```bash
 source .venv/bin/activate
@@ -34,8 +33,6 @@ python -m django --version
 ```
 
 ### 5.2. Create a Django project named `geoweb`
-
-Still in the terminal, run:
 
 ```bash
 django-admin startproject geoweb
@@ -55,7 +52,7 @@ python manage.py startapp geowebapp
 
 ## 6. Update `settings.py`
 
-Open the `settings.py` file inside the `geoweb` folder and make the following changes.
+Open the `settings.py` file inside the `geoweb` folder and make the following changes:
 
 ### 6.1. Add imports at the top of the file (or near other imports)
 
