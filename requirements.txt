@@ -1,5 +1,4 @@
 Django==4.2.11
-python-dotenv==1.0.1
 GDAL==3.6.2
 djangorestframework==3.15.2
 djangorestframework-gis==1.0.0
