@@ -1,91 +1,52 @@
-# Tutorial for the American Geophysical Union Fall Meeting 2025
+# Tutorial \#3 for the American Geophysical Union Fall Meeting 2025
+This tutorial will help you load spatial and timeseries data into the ODM2-based DB.
 
-# Following the setup of the agufm25 template in CodeSpaces, run the following commands to create a Django WebGIS Application in your terminal
+## 1. Connect to your existing account
 
-# CodeSpaces Terminal
-$ source .venv/bin/activate
+- [GitHub Sign in](https://github.com/login?)
 
-$ python --version
+## 2. Access the workshop GitHub repository
 
-$ python -m django --version
+Click the following link to open the workshop repository: [AGUFM 2025 Workshop GitHub Repo](https://github.com/pcelicourt/agufm2025/tree/odm2loader).
 
-# Still in the terminal, run the following commands to create a Django Project with name geoweb
-$ django-admin startproject geoweb
+## 3. Create a codespace from the branch geodjangoapp
 
-## Change to the newly created directory geoweb
-$ cd geoweb
+With the branch geodjangoapp selected in the agufm202 repo, click the + sign to create a codespace from the branch as demonstrated in the image below:
 
-## Still in the terminal, run the following commands to create a Django App with name geowebapp
-$ python manage.py startapp geowebapp
+![Launch CodeSpace](https://github.com/pcelicourt/aguassets/raw/main/images/odm2loaderlaunch.png)
 
-# In the settings.py file within the geoweb folder
+## 4. Codespace development environment
 
-## Add the following codes
-`
-import os
-from dotenv import load_dotenv
-load_dotenv(os.path.join(BASE_DIR, ".env"))
-from ctypes.util import find_library
-`
+Your Codespace development environment should look similar to this:
 
-## Replace the variable INSTALLED_APPS with the following value
-`
-INSTALLED_APPS = [
-    "django.contrib.admin",
-    "django.contrib.auth",
-    "django.contrib.contenttypes",
-    "django.contrib.sessions",
-    "django.contrib.messages",
-   "django.contrib.staticfiles",
-    "django.contrib.gis",
-    "geowebapp",
-]
-`
+![CodeSpace Terminal](https://github.com/pcelicourt/aguassets/raw/main/images/odm2loadercodespace.png)
 
-## Replace the variable DATABASES with the following value
-`
-DATABASES = {
-    "default": {
-        "ENGINE": "django.contrib.gis.db.backends.spatialite",
-        "NAME": BASE_DIR / "db.sqlite3",
-    }
-}
-`
+## 5. Continue the Django WebGIS Application development
+In the Codespace terminal, run the following commands.
 
-`
-TEMPLATES = [
-    {
-        "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [BASE_DIR / "geowebapp/static/templates"],
-        "APP_DIRS": True,
-        "OPTIONS": {
-            "context_processors": [
-                "django.template.context_processors.debug",
-                "django.template.context_processors.request",
-                "django.contrib.auth.context_processors.auth",
-                "django.contrib.messages.context_processors.messages",
-            ],
-        },
-    },
-]
-`
-## Add these codes at the end of the file settings.py
-`
-GDAL_LIBRARY_PATH = find_library("gdal")
-GEOS_LIBRARY_PATH = find_library("geos_c")
-SPATIALITE_LIBRARY_PATH = "mod_spatialite"
-`
+### 5.1. Verify Python and Django versions in the Codespace terminal
 
-# Check the models.py module
+```bash
+source .venv/bin/activate
+python --version
+pip install -r requirements.txt
+python -m django --version
+```
 
+### 5.3. Change into the `geoweb` directory
+Note that you must execute the following commands containing 'python -m manage ...' or 'python manage.py ...' within the geoweb folder.
 
-# CodeSpaces Terminal: Run the following command to launch the Django application
-$ cd geoweb
-$ python manage.py migrate
-$ python manage.py runserver
+```bash
+cd geoweb
+```
 
+## 5.4 Check and run migrations and start the development server
 
-# The Model
-## With the module models.py populated, run the following commands to populate the DB
-$ python manage.py makemigrations
-$ python manage.py migrate
+In the Codespace terminal, you can check the content of the migrations files with the geoweb/geowebapp/migrations/ folder. Then, run the following command in the terminal.
+
+```bash
+python manage.py migrate
+```
+## 6. Check the results
+In the Codespace terminal, content similar to the image should be printed for command 'python manage.py migrates'.
+![Django Successful Migrations](https://github.com/pcelicourt/aguassets/raw/main/images/initialmigration.png)
