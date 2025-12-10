@@ -1,5 +1,5 @@
-# Tutorial \#3 for the American Geophysical Union Fall Meeting 2025
-This tutorial will help you load spatial and timeseries data into the ODM2-based DB.
+# Tutorial \#4 for the American Geophysical Union Fall Meeting 2025
+This tutorial will help you create both a front-end and back-end api in Django.
 
 ## 1. Connect to your existing account
 
@@ -7,19 +7,19 @@ This tutorial will help you load spatial and timeseries data into the ODM2-based
 
 ## 2. Access the workshop GitHub repository
 
-Click the following link to open the workshop repository: [AGUFM 2025 Workshop GitHub Repo](https://github.com/pcelicourt/agufm2025/tree/odm2loader).
+Click the following link to open the workshop repository: [AGUFM 2025 Workshop GitHub Repo](https://github.com/pcelicourt/agufm2025/tree/api-frontend).
 
-## 3. Create a codespace from the branch geodjangoapp
+## 3. Create a codespace from the branch api-frontend
 
 With the branch geodjangoapp selected in the agufm202 repo, click the + sign to create a codespace from the branch as demonstrated in the image below:
 
-![Launch CodeSpace](https://github.com/pcelicourt/aguassets/raw/main/images/odm2loaderlaunch.png)
+![Launch CodeSpace](https://github.com/pcelicourt/aguassets/raw/main/images/api-frontend.png)
 
 ## 4. Codespace development environment
 
 Your Codespace development environment should look similar to this:
 
-![CodeSpace Terminal](https://github.com/pcelicourt/aguassets/raw/main/images/odm2loadercodespace.png)
+![CodeSpace Terminal](https://github.com/pcelicourt/aguassets/raw/main/images/api-frontendcodespace.png)
 
 ## 5. Continue the Django WebGIS Application development
 In the Codespace terminal, run the following commands.
@@ -46,7 +46,27 @@ In the Codespace terminal, you can check the content of the migrations files wit
 
 ```bash
 python manage.py migrate
+python manage.py startapp geowebapis
 ```
+
+### 5.5 Replace the `INSTALLED_APPS` variable with:
+
+```python
+INSTALLED_APPS = [
+    "django.contrib.admin",
+    "django.contrib.auth",
+    "django.contrib.contenttypes",
+    "django.contrib.sessions",
+    "django.contrib.messages",
+   "django.contrib.staticfiles",
+    "django.contrib.gis",
+    "geowebapp",
+    "geowebapis",
+    "rest_framework",
+    "rest_framework_gis",
+]
+```
+
 ## 6. Check the results and start the development server
 In the Codespace terminal, content similar to the image should be printed for command 'python manage.py migrates'.
 ![Django Successful Migrations](https://github.com/pcelicourt/aguassets/raw/main/images/initialmigration.png)
