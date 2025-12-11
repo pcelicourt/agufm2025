@@ -70,3 +70,44 @@ function getSensor(e) {
         Plotly.newPlot('sampleplot', data, layout);   
       });                                              
 }
+
+function getLocation() {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+            function(position) {
+                // Send precise client-side coordinates to the server
+                const csrftoken = getCookie('csrftoken');
+                console.log('position:', position);
+                console.log('Sending location:', position.coords.latitude, position.coords.longitude);
+                
+                fetch("{% url 'user_location' %}", {
+                    method: 'POST',
+                    credentials: 'include',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                        'X-CSRFToken': csrftoken
+                    },
+                    body: `latitude=${position.coords.latitude}&longitude=${position.coords.longitude}&timestamp=${position.timestamp}`                        
+                })
+                .then(response => response.json())
+                .then(data => console.log('Location stored:', data))
+                .catch(error => console.error('Error storing location:', error));
+            },
+            function(error) {
+                // On error, fallback to IP-based location
+                fetch("{% url 'location_from_ip' %}")
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log('Fallback location (IP-based):', data.location);
+                    });
+            }
+        );
+    } else {
+        // Browser doesn't support geolocation – fallback immediately
+        fetch("{% url 'location_from_ip' %}")
+            .then(response => response.json())
+            .then(data => {
+                console.log('Fallback location (IP-based):', data.location);
+            });
+    }
+}

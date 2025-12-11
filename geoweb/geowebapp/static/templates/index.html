@@ -1,4 +1,5 @@
 {% load static %}
+{% load template_jsonify %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -46,6 +47,18 @@
                 
                 <!-- Layer List -->
                 <div id="layer-list" class="layer-list">
+                    <div class="form-group" id="sensors">
+                        {% csrf_token %}
+                    <label for="dropdwn">Pick one sensor from {% sensors_count %}:</label>
+                    <select class="form-select" id="dropdwn" data-live-search="true" onchange="getSensors()">
+                        {% with sensors|jsonify as response %}
+                            {% for sensor in response.features %}
+                                <option>{{ sensor.properties.samplingfeaturecode }}</option>
+                            {% endfor %}
+                        {% endwith %}
+                    </select>
+                    </div>                    
+                    
                     <!--<div class="loading">
                         <div class="spinner"></div>
                         <span>Loading layers...</span>
@@ -80,64 +93,9 @@
             integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
             crossorigin=""></script>
     
-    <!-- Custom JavaScript 
-    <script src="{% static 'js/app.js' %}"></script>-->
+    <!-- Custom JavaScript -->
+    <script src="{% static 'js/eventhandler.js' %}"></script>
     <script>
-        // Function to get CSRF token from cookie
-        function getCookie(name) {
-            let cookieValue = null;
-            if (document.cookie && document.cookie !== '') {
-                const cookies = document.cookie.split(';');
-                for (let i = 0; i < cookies.length; i++) {
-                    const cookie = cookies[i].trim();
-                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                        break;
-                    }
-                }
-            }
-            return cookieValue;
-        }
-
-        function getLocation() {
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(
-                    function(position) {
-                        // Send precise client-side coordinates to the server
-                        const csrftoken = getCookie('csrftoken');
-                        console.log('position:', position);
-                        console.log('Sending location:', position.coords.latitude, position.coords.longitude);
-                        
-                        fetch("{% url 'user_location' %}", {
-                            method: 'POST',
-                            credentials: 'include',
-                            headers: {
-                                'Content-Type': 'application/x-www-form-urlencoded',
-                                'X-CSRFToken': csrftoken
-                            },
-                            body: `latitude=${position.coords.latitude}&longitude=${position.coords.longitude}&timestamp=${position.timestamp}`                        })
-                        .then(response => response.json())
-                        .then(data => console.log('Location stored:', data))
-                        .catch(error => console.error('Error storing location:', error));
-                    },
-                    function(error) {
-                        // On error, fallback to IP-based location
-                        fetch("{% url 'location_from_ip' %}")
-                            .then(response => response.json())
-                            .then(data => {
-                                console.log('Fallback location (IP-based):', data.location);
-                            });
-                    }
-                );
-            } else {
-                // Browser doesn't support geolocation – fallback immediately
-                fetch("{% url 'location_from_ip' %}")
-                    .then(response => response.json())
-                    .then(data => {
-                        console.log('Fallback location (IP-based):', data.location);
-                    });
-            }
-        }
         // Trigger location retrieval on page load
         window.onload = getLocation;
     </script>  
