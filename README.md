@@ -66,6 +66,24 @@ INSTALLED_APPS = [
     "rest_framework_gis",
 ]
 ```
+```python
+TEMPLATES = [
+    {
+        "BACKEND": "django.template.backends.django.DjangoTemplates",
+        "DIRS": [BASE_DIR / "geowebapp/static/templates",
+                 BASE_DIR / "geowebapis/static/templates",
+                 ],
+        "APP_DIRS": True,
+        "OPTIONS": {
+            "context_processors": [
+                "django.template.context_processors.debug",
+                "django.template.context_processors.request",
+                "django.contrib.auth.context_processors.auth",
+                "django.contrib.messages.context_processors.messages",
+            ],
+        },
+    },
+]```
 
 ## 6. Check the results and start the development server
 In the Codespace terminal, content similar to the image should be printed for command 'python manage.py migrates'.

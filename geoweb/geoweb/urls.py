@@ -17,8 +17,12 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 
+from geowebapp import views
+
 
 urlpatterns = [
     path("admin/", admin.site.urls),
     path('', include('geowebapp.urls')),
+    path('', include('geowebapis.urls')),
+    path('', views.MainView.as_view(), name='home'),
 ]

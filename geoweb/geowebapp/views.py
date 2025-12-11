@@ -52,7 +52,7 @@ def map_view(request):
 
 
 class MainView(TemplateView):
-    template_name = 'mapl.html'
+    template_name = 'index.html'
 
     def get_context_data(self, **kwargs):
         figure = folium.Figure()
@@ -64,6 +64,7 @@ class MainView(TemplateView):
         champs_fg = folium.FeatureGroup()
         parcelles_fg = folium.FeatureGroup()
         fermes_fg = folium.FeatureGroup()
+        user_location_fg = folium.FeatureGroup()
 
         all_features = SamplingFeatures.objects.all()
         map_center = all_features.first().featuregeometry.centroid
@@ -73,7 +74,7 @@ class MainView(TemplateView):
         champs = all_features.filter(samplingfeaturecode__istartswith='Field')
         parcelles = all_features.filter(
             samplingfeaturecode__istartswith='Parcel')
-
+        user_locations = all_features.filter(samplingfeaturecode__istartswith='User_')
         # Make the folium map
         _map = folium.Map(
             location=t.transform(map_center.x, map_center.y),
@@ -94,6 +95,18 @@ class MainView(TemplateView):
                 icon=folium.Icon(icon='fa-sensor', prefix='fa')
             )
             )
+
+        for user_location in user_locations:  # sensor.objects.all()
+            coords = user_location.featuregeometry.coords
+            print('coord', coords)
+            user_location_fg.add_child(folium.Marker(
+                location=list(t.transform(coords[0], coords[1])),
+                popup=user_location.samplingfeaturename,
+                tooltip=user_location.samplingfeaturedescription,
+                icon=folium.Icon(icon='fa-anchor', prefix='fa')
+            )
+            ) 
+
         for parcelle in parcelles:  # sensor.objects.all()
             wkt = load_wkt(parcelle.featuregeometrywkt)
 
@@ -193,7 +206,8 @@ class MainView(TemplateView):
         plotly_js= "https://cdn.plot.ly/plotly-3.0.1.min.js"
         _map.get_root().html.add_child(folium.JavascriptLink(plotly_js))
         _map.get_root().html.add_child(event_handler)
-
+        
+        _map.add_child(user_location_fg)
         _map.add_child(sensors_fg)
         _map.add_child(parcelles_fg)
         _map.add_child(champs_fg)

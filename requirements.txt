@@ -9,3 +9,5 @@ folium>=0.14.0
 geopandas>=0.15.3
 django-cors-headers==4.4.0
 fiona==1.9.4
+requests==2.31.0
+pyproj==3.6.0

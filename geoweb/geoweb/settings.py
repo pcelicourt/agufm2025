@@ -59,7 +59,9 @@ ROOT_URLCONF = "geoweb.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [BASE_DIR / "geowebapp/static/templates"],
+        "DIRS": [BASE_DIR / "geowebapp/static/templates",
+                 BASE_DIR / "geowebapis/static/templates",
+                 ],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
