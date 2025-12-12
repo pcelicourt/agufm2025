@@ -7,7 +7,7 @@ class SamplingFeaturesSerializers(GeoFeatureModelSerializer):
     """ A class to serialize locations as GeoJSON compatible data """
 
     class Meta:
-        app_label  = 'agrogeoinfoapp'
+        app_label  = 'geowebapp'
         model = SamplingFeatures
         geo_field = "featuregeometry"
         fields = '__all__'

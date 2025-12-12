@@ -11,7 +11,7 @@ import uuid
 
 from pyproj import CRS, Transformer
 from shapely.wkt import loads as load_wkt
-#from shapely.ops import transform
+# from shapely.ops import transform
 from shapely.geometry import Point
 
 import requests
@@ -25,6 +25,7 @@ from .models import SamplingFeatures, TimeSeriesResults, \
 from .serializers import SamplingFeaturesSerializers
 
 from .utils import get_client_ip
+
 
 def map_view(request):
     geos = []
@@ -101,7 +102,8 @@ class MainView(TemplateView):
             sensors_fg.add_child(folium.Marker(
                 location=list(t.transform(coords[0], coords[1])),
                 popup=sensor.samplingfeaturename,
-                tooltip=sensor.samplingfeaturedescription,
+                tooltip=folium.Tooltip(
+                    sensor.samplingfeaturecode, sticky=False),
                 icon=folium.Icon(icon='fa-sensor', prefix='fa')
             )
             )
@@ -205,7 +207,7 @@ class MainView(TemplateView):
                             var {{ this.get_name() }} = L.marker(
                                 {{ this.location|tojson }},
                                 {{ this.options|tojson }}
-                            ).addTo({{ this._parent.get_name() }}).on('click', getSensor);
+                            ).addTo({{ this._parent.get_name() }}).on('click', getSensorByClick);
                            {% endmacro %}
                         """
         # Change template to custom template
@@ -229,7 +231,7 @@ class MainView(TemplateView):
         sensors_json = JsonResponse(
             SamplingFeaturesSerializers(sensors, many=True).data).content
         return {"map": figure._repr_html_(), 'title': 'Cook Agronomy Farm', 'sensors': sensors_json}
-    
+
 
 userlocationfeaturegeotypecv = CV_SamplingFeatureGeoType.objects.filter(
     term='point').first()
@@ -305,4 +307,3 @@ def location_from_ip(request):
         # Store or personalize based on location_data
         return JsonResponse({'location': location_data})
     return JsonResponse({'error': 'Location not found'}, status=404)
-

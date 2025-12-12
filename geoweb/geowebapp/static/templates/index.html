@@ -50,7 +50,7 @@
                     <div class="form-group" id="sensors">
                         {% csrf_token %}
                     <label for="dropdwn">Pick one sensor from {% sensors_count %}:</label>
-                    <select class="form-select" id="dropdwn" data-live-search="true" onchange="getSensors()">
+                    <select class="form-select" id="dropdwn" data-live-search="true" onchange="getSensorByName()">
                         {% with sensors|jsonify as response %}
                             {% for sensor in response.features %}
                                 <option>{{ sensor.properties.samplingfeaturecode }}</option>
@@ -78,7 +78,7 @@
                 
                 <!-- Map Controls Overlay -->
                 <div class="map-controls">
-                    <div class="zoom-info" id="zoom-info">Zoom: 10</div>
+                    <!-- <div class="zoom-info" id="zoom-info">Zoom: 10</div>-->
                     <div class="coordinates" id="coordinates">Lat: 0.000, Lng: 0.000</div>
                 </div>
             </main>
