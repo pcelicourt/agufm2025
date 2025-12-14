@@ -3,13 +3,22 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import ensure_csrf_cookie
 import uuid
 
-import requests
-from geowebapp.models import SamplingFeatures, TimeSeriesResults, \
-    TimeSeriesResultValues, Results, FeatureActions, CV_SamplingFeatureGeoType, CV_SamplingFeatureType
 from shapely.geometry import Point
 from pyproj import CRS, Transformer
+import requests
+
+from geowebapp.models import SamplingFeatures, TimeSeriesResults, \
+    TimeSeriesResultValues, Results, FeatureActions, CV_SamplingFeatureGeoType, CV_SamplingFeatureType
 
 from geowebapp.serializers import SamplingFeaturesSerializers
+
+
+@ensure_csrf_cookie
+def sampling_features(request):
+    all_features = SamplingFeatures.objects.all() 
+    serializer = SamplingFeaturesSerializers(all_features, many=True)
+    return JsonResponse(serializer.data, safe=False)   
+
 
 
 @ensure_csrf_cookie

@@ -11,20 +11,12 @@ Click the following link to open the workshop repository: [AGUFM 2025 Workshop G
 
 ## 3. Create a codespace from the branch api-frontend
 
-With the branch geodjangoapp selected in the agufm202 repo, click the + sign to create a codespace from the branch as demonstrated in the image below:
+With the branch api-frontend selected in the agufm2025 repo, click : (a) the blue button labelled **<> Code**, (b) tab Codespaces, then (c) **+** sign to create a codespace from the branch.
 
-![Launch CodeSpace](https://github.com/pcelicourt/aguassets/raw/main/images/api-frontend.png)
-
-## 4. Codespace development environment
-
-Your Codespace development environment should look similar to this:
-
-![CodeSpace Terminal](https://github.com/pcelicourt/aguassets/raw/main/images/api-frontendcodespace.png)
-
-## 5. Continue the Django WebGIS Application development
+## 4. Continue the Django WebGIS Application development
 In the Codespace terminal, run the following commands.
 
-### 5.1. Verify Python and Django versions in the Codespace terminal
+### 4.1. Verify Python and Django versions in the Codespace terminal
 
 ```bash
 source .venv/bin/activate
@@ -33,14 +25,14 @@ pip install -r requirements.txt
 python -m django --version
 ```
 
-### 5.3. Change into the `geoweb` directory
+### 4.3. Change into the `geoweb` directory
 Note that you must execute the following commands containing 'python -m manage ...' or 'python manage.py ...' within the geoweb folder.
 
 ```bash
 cd geoweb
 ```
 
-## 5.4 Check and run migrations 
+## 4.4 Check and run migrations 
 
 In the Codespace terminal, you can check the content of the migrations files with the geoweb/geowebapp/migrations/ folder. Then, run the following command in the terminal.
 
@@ -49,7 +41,7 @@ python manage.py migrate
 python manage.py startapp geowebapis
 ```
 
-### 5.5 Replace the `INSTALLED_APPS` variable with:
+### 4.5 Replace the `INSTALLED_APPS` variable with:
 
 ```python
 INSTALLED_APPS = [
@@ -66,24 +58,6 @@ INSTALLED_APPS = [
     "rest_framework_gis",
 ]
 ```
-```python
-TEMPLATES = [
-    {
-        "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [BASE_DIR / "geowebapp/static/templates",
-                 BASE_DIR / "geowebapis/static/templates",
-                 ],
-        "APP_DIRS": True,
-        "OPTIONS": {
-            "context_processors": [
-                "django.template.context_processors.debug",
-                "django.template.context_processors.request",
-                "django.contrib.auth.context_processors.auth",
-                "django.contrib.messages.context_processors.messages",
-            ],
-        },
-    },
-]```
 
 ## 6. Check the results and start the development server
 In the Codespace terminal, content similar to the image should be printed for command 'python manage.py migrates'.
