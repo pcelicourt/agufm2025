@@ -60,11 +60,38 @@ INSTALLED_APPS = [
 ]
 ```
 
-## 6. Files chain
+## 6. Files editing
+### 6.1 Template File
+we will click on and look at Line 97 of the template file: /geowebapp/templates/index.html
+We see the instruction: <script src="{% static 'js/eventhandler.js' %}"></script> 
+It indicates that there template must include a file named eventhandler.js located inside the /geoweb/static/ folder.
 
+### 6.2 Static File
+We will click on and inspect that file /geoweb/static/eventhandler.js at three different points:
 
-In the Codespace terminal, content similar to the image should be printed for command 'python manage.py migrates'.
-![Django Successful Migrations](https://github.com/pcelicourt/aguassets/raw/main/images/initialmigration.png)
+Line 19: We see the following code that defines a function getSensorByName() to be called when user selects a sensor in the interface acoording to Line 53 of the template /geowebapp/static/index.html:
+<select class="form-select" id="dropdwn" data-live-search="true" onchange="getSensorByName()">
+
+```JS
+function getSensorByName() {
+    var dropdown = document.getElementById('dropdwn');
+    if (!dropdown) return;
+    var sensorCode = dropdown.value;
+    console.log("Selected sensor from dropdown:", sensorCode);
+    fetch("sensor/", {
+        method: "POST",
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'X-CSRFToken': csrftoken,
+        },
+        body: `sensor_name=${sensorCode}`
+    }) .....
+```
+In this function, we need to spot the entry point or url to the server. It is: "sensor/" that the function fetch will request and which must be defined in the backend. 
+The same applies for Line 39 and Line 96, but for Line 96, we have a different url "user-location/" which must be defined in the back-end as well. 
+
+### 6.3 URL files
+
 
 Run the following to start the development server:
 ```bash

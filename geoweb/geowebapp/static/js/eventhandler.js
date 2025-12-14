@@ -92,6 +92,7 @@ function getSensorByClick(e) {
         });
 }
 
+
 function getLocation() {
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
