@@ -23,6 +23,6 @@ from geowebapp import views
 urlpatterns = [
     path("admin/", admin.site.urls),
     path('', include('geowebapp.urls')),
-    path('', include('geowebapis.urls')),
+    #path('', include('geowebapis.urls')),
     path('', views.MainView.as_view(), name='home'),
 ]

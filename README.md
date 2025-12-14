@@ -38,10 +38,11 @@ In the Codespace terminal, you can check the content of the migrations files wit
 
 ```bash
 python manage.py migrate
-python manage.py startapp geowebapis
 ```
 
 ### 4.5 Replace the `INSTALLED_APPS` variable with:
+Here I have pre-created a new app named 'geowebapis' using the command 'python manage.py startapp geowebapis'.
+I have populated it with some contents necessary for the next steps of the activity.
 
 ```python
 INSTALLED_APPS = [
@@ -59,7 +60,9 @@ INSTALLED_APPS = [
 ]
 ```
 
-## 6. Check the results and start the development server
+## 6. Files chain
+
+
 In the Codespace terminal, content similar to the image should be printed for command 'python manage.py migrates'.
 ![Django Successful Migrations](https://github.com/pcelicourt/aguassets/raw/main/images/initialmigration.png)
 

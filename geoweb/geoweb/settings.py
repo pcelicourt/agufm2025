@@ -39,9 +39,9 @@ INSTALLED_APPS = [
    "django.contrib.staticfiles",
     "django.contrib.gis",
     "geowebapp",
-    "geowebapis",
-    "rest_framework",
-    "rest_framework_gis",
+    #"geowebapis",
+    #"rest_framework",
+    #"rest_framework_gis",
 ]
 
 MIDDLEWARE = [
