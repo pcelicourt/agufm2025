@@ -1,0 +1,106 @@
+{% load static %}
+{% load template_jsonify %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AGU Workshop 2025</title>
+    
+    <!-- Inter Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+          integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+          crossorigin=""/>
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{% static 'css/app.css' %}">
+</head>
+<body>
+    <div id="app">
+        <!-- Header -->
+        <header class="app-header">
+            <div class="header-brand">
+                <h1>AGU Workshop 2025</h1>
+                <span class="header-subtitle">From Data to Interactive WebGIS</span>
+            </div>
+            <div class="header-actions">                
+            </div>
+        </header>
+        
+        <!-- Main Content -->
+        <div class="app-content">
+            <!-- Sidebar -->
+            <aside class="sidebar">
+                <div class="sidebar-header">
+                    <h2>Layers</h2>
+                    <button id="refresh-layers" class="btn-icon" title="Refresh layers">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M23 4v6h-6M1 20v-6h6M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/>
+                        </svg>
+                    </button>
+                </div>
+                
+                <!-- Layer List -->
+                <div id="layer-list" class="layer-list">
+                    <div class="form-group" id="sensors">
+                        {% csrf_token %}
+                    <label for="dropdwn">Pick one sensor from {% sensors_count %}:</label>
+                    <select class="form-select" id="dropdwn" data-live-search="true" onchange="getSensorByName()">
+                        {% with sensors|jsonify as response %}
+                            {% for sensor in response.features %}
+                                <option>{{ sensor.properties.samplingfeaturecode }}</option>
+                            {% endfor %}
+                        {% endwith %}
+                    </select>
+                    </div>                    
+                    
+                    <!--<div class="loading">
+                        <div class="spinner"></div>
+                        <span>Loading layers...</span>
+                    </div>-->
+                </div>
+                
+                <!-- Layer Info Panel -->
+                <div class="layer-info" id="layer-info">
+                    <h3></h3>
+                    <p class="hint"></p>
+                </div>
+            </aside>
+            
+            <!-- Map Container -->
+            <main class="map-container">
+                <div id="map">{{map|safe}}</div>
+                
+                <!-- Map Controls Overlay -->
+                <div class="map-controls">
+                    <!-- <div class="zoom-info" id="zoom-info">Zoom: 10</div>-->
+                    <div class="coordinates" id="coordinates">Lat: 0.000, Lng: 0.000</div>
+                </div>
+            </main>
+        </div>
+        
+        <!-- Toast Container for Notifications -->
+        <div id="toast-container" class="toast-container"></div>
+    </div>
+    
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+            integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+            crossorigin=""></script>
+    
+    <!-- Custom JavaScript -->
+    <script src="{% static 'js/eventhandler.js' %}"></script>
+    <script>
+        // Trigger location retrieval on page load
+        window.onload = getLocation;
+    </script>  
+    <script>
+      {{map.script.render|safe}}
+    </script>  
+</body>
+</html> 

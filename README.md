@@ -59,13 +59,8 @@ INSTALLED_APPS = [
 ]
 ```
 
-## 6. Check the results and start the development server
-In the Codespace terminal, content similar to the image should be printed for command 'python manage.py migrates'.
-![Django Successful Migrations](https://github.com/pcelicourt/aguassets/raw/main/images/initialmigration.png)
-
-Run the following to start the development server:
+## 5. Migrations command
+In the Codespace terminal, run the following command to migrate available data to the DB :
 ```bash
-python manage.py runserver
+python manage.py migrate
 ```
-If successful, your interface shoud look like:
-![Django WebGIS Successful Launch](https://github.com/pcelicourt/aguassets/raw/main/images/dataloadedinterface.png)

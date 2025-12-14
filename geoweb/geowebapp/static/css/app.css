@@ -1,0 +1,580 @@
+/* ===== CSS Variables ===== */
+:root {
+    /* Dark theme colors (darker, red-accented) */
+    --bg-primary: #080808;
+    --bg-secondary: #121212;
+    --bg-tertiary: #1f1f1f;
+    --bg-hover: #2d2d2d;
+    
+    /* Text colors */
+    --text-primary: #e8e8e8;
+    --text-secondary: #a8a8a8;
+    --text-muted: #6f6f6f;
+    
+    /* Accent colors (Hacker Red) */
+    --accent-primary: #ff4136; /* A classic, bold red */
+    --accent-success: #f0f0f0; /* Use bright white/off-white for success to avoid red/green clash */
+    --accent-warning: #ffb700;
+    --accent-danger: #ff4136;
+    
+    /* Borders and shadows */
+    --border-color: #383838;
+    --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.4);
+    --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.5);
+    --shadow-lg: 0 8px 16px rgba(0, 0, 0, 0.6);
+    
+    /* Layout */
+    --header-height: 60px;
+    --sidebar-width: 350px;
+    
+    /* Transitions */
+    --transition-fast: 0.2s ease-in-out;
+    --transition-normal: 0.3s ease;
+
+    /* Fonts (Hacker Aesthetic) */
+    --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    --font-mono: 'Fira Code', 'Menlo', 'Consolas', monospace;
+}
+
+/* ===== Reset & Base Styles ===== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-sans);
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    line-height: 1.5;
+    font-size: 16px; /* Base font size for rem units */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* ===== App Container ===== */
+#app {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+/* ===== Header ===== */
+.app-header {
+    height: var(--header-height);
+    background: var(--bg-secondary);
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 2rem;
+    box-shadow: var(--shadow-sm);
+    z-index: 1000;
+}
+
+.header-brand h1 {
+    font-family: var(--font-mono);
+    font-size: 1.5rem;
+    font-weight: 500;
+    margin: 0;
+    color: var(--accent-primary);
+    text-shadow: 0 0 5px rgba(255, 65, 54, 0.5);
+}
+
+.header-subtitle {
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    margin-left: 1rem;
+    opacity: 0.8;
+}
+
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.user-info {
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+}
+
+.user-menu {
+    display: flex;
+    align-items: center;
+    padding: 0.5rem 1rem;
+    background: var(--bg-tertiary);
+    border-radius: 6px;
+    margin-right: 0.5rem;
+    font-family: var(--font-mono);
+}
+
+.user-menu svg {
+    color: var(--accent-primary);
+}
+
+/* ===== Buttons ===== */
+.btn, .btn-icon {
+    padding: 0.5rem 1rem;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: all var(--transition-fast);
+    font-family: var(--font-mono);
+    background: var(--bg-tertiary);
+    color: var(--text-primary);
+    position: relative;
+    overflow: hidden;
+}
+
+.btn:hover, .btn-icon:hover {
+    border-color: var(--text-secondary);
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-sm);
+}
+
+/* Glossy Sheen Effect on Hover */
+.btn:hover::before, .layer-item:hover::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -80%;
+    width: 50%;
+    height: 100%;
+    background: linear-gradient(to right, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0) 100%);
+    transform: skewX(-25deg);
+    animation: sheen 0.7s forwards;
+}
+
+@keyframes sheen {
+    100% {
+        left: 120%;
+    }
+}
+
+.btn-primary {
+    background: var(--accent-primary);
+    border-color: var(--accent-primary);
+    color: white;
+}
+
+.btn-primary:hover {
+    background: #e03a30;
+    border-color: #ff635a;
+}
+
+.btn-icon {
+    width: 36px;
+    height: 36px;
+    padding: 0;
+    background: transparent;
+    border-color: transparent;
+    color: var(--text-secondary);
+}
+
+.btn-icon:hover {
+    background: var(--bg-tertiary);
+    border-color: var(--border-color);
+    color: var(--text-primary);
+}
+
+/* ===== Main Content Layout ===== */
+.app-content {
+    flex: 1;
+    display: flex;
+    overflow: hidden;
+}
+
+/* ===== Sidebar ===== */
+.sidebar {
+    width: var(--sidebar-width);
+    background: var(--bg-secondary);
+    border-right: 1px solid var(--border-color);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.sidebar-header {
+    padding: 1.5rem;
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.sidebar-header h2 {
+    font-family: var(--font-mono);
+    font-size: 1.1rem;
+    font-weight: 500;
+}
+
+/* ===== Layer List ===== */
+.layer-list {
+    flex: 1;
+    overflow-y: auto;
+    padding: 1rem;
+}
+
+.layer-item {
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+    margin-bottom: 0.5rem;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+    overflow: hidden;
+}
+
+.layer-item:hover {
+    background: var(--bg-hover);
+    border-color: var(--text-secondary);
+    transform: translateX(2px);
+}
+
+.layer-item.active {
+    background: var(--bg-hover);
+    border-color: var(--accent-primary);
+    box-shadow: 0 0 0 1px var(--accent-primary) inset, 0 0 8px rgba(255, 65, 54, 0.3);
+}
+
+.layer-item.disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    background: repeating-linear-gradient(45deg, var(--bg-tertiary), var(--bg-tertiary) 10px, #2a2a2a 10px, #2a2a2a 20px);
+}
+
+.layer-name {
+    font-weight: 500;
+    font-size: 0.9rem;
+    flex: 1;
+}
+
+.layer-type {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.layer-status {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--text-muted);
+    transition: background var(--transition-fast);
+}
+
+.layer-item.active .layer-status {
+    background: var(--accent-success);
+    box-shadow: 0 0 8px var(--accent-success);
+}
+
+/* ===== Layer Info Panel ===== */
+.layer-info {
+    padding: 1.5rem;
+    border-top: 1px solid var(--border-color);
+    background: var(--bg-primary);
+}
+
+.layer-info h3 {
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+}
+
+.hint {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+}
+
+/* ===== Map Container ===== */
+.map-container {
+    flex: 1;
+    position: relative;
+    background: var(--bg-primary);
+}
+
+#map {
+    width: 100%;
+    height: 100%;
+    background: var(--bg-primary);
+}
+
+/* ===== Map Controls Overlay ===== */
+.map-controls {
+    position: absolute;
+    bottom: 2rem;
+    right: 2rem;
+    background: rgba(18, 18, 18, 0.9);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    pointer-events: none;
+    box-shadow: var(--shadow-md);
+}
+
+.zoom-info, .coordinates {
+    margin: 0.25rem 0;
+}
+
+/* ===== Loading States ===== */
+.loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 3rem;
+    color: var(--text-secondary);
+}
+
+.spinner {
+    width: 40px;
+    height: 40px;
+    border: 3px solid var(--bg-tertiary);
+    border-top-color: var(--accent-primary);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    margin-bottom: 1rem;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* ===== Toast Notifications ===== */
+.toast-container {
+    position: fixed;
+    top: calc(var(--header-height) + 1rem);
+    right: 1rem;
+    z-index: 2000;
+}
+
+.toast {
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 1rem 1.5rem;
+    margin-bottom: 0.5rem;
+    min-width: 300px;
+    box-shadow: var(--shadow-lg);
+    animation: slideIn 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+.toast.success {
+    border-left: 3px solid var(--accent-success);
+    color: var(--accent-success);
+}
+
+.toast.error {
+    border-left: 3px solid var(--accent-danger);
+    color: var(--accent-danger);
+}
+
+.toast.warning {
+    border-left: 3px solid var(--accent-warning);
+    color: var(--accent-warning);
+}
+
+/* ===== Scrollbar Styling ===== */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--bg-primary);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--bg-hover);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--text-muted);
+}
+
+/* ===== Leaflet Overrides ===== */
+.leaflet-container {
+    background: var(--bg-primary);
+    font-family: inherit;
+}
+
+.leaflet-popup-content-wrapper {
+    background: var(--bg-secondary);
+    color: var(--text-primary);
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow-lg);
+}
+
+.leaflet-popup-tip {
+    background: var(--bg-secondary);
+}
+
+.leaflet-control-zoom a {
+    background: var(--bg-secondary) !important;
+    color: var(--text-primary) !important;
+    border: 1px solid var(--border-color) !important;
+}
+
+.leaflet-control-zoom a:hover {
+    background: var(--bg-tertiary) !important;
+}
+
+/* ===== Responsive Design ===== */
+@media (max-width: 768px) {
+    .sidebar {
+        width: 100%;
+        max-width: 100%;
+    }
+    
+    .app-content {
+        flex-direction: column;
+    }
+    
+    .map-container {
+        min-height: 50vh;
+    }
+}
+
+/* ===== Layer Item States ===== */
+.layer-item.loading {
+    opacity: 0.7;
+    pointer-events: none;
+}
+
+.layer-item.loading .layer-status {
+    animation: pulse 1s ease-in-out infinite;
+}
+
+@keyframes pulse {
+    0% { opacity: 0.3; }
+    50% { opacity: 1; }
+    100% { opacity: 0.3; }
+}
+
+/* ===== Feature Popup Styling ===== */
+.feature-popup {
+    min-width: 200px;
+    max-width: 300px;
+}
+
+.feature-popup h4 {
+    margin: 0 0 0.5rem 0;
+    color: var(--accent-primary);
+    font-family: var(--font-mono);
+    font-size: 1rem;
+    font-weight: 500;
+}
+
+.feature-popup p {
+    margin: 0.25rem 0;
+    font-size: 0.85rem;
+    line-height: 1.4;
+}
+
+.feature-popup strong {
+    color: var(--text-secondary);
+    font-weight: 500;
+}
+
+/* ===== Additional Leaflet Overrides ===== */
+.leaflet-popup-content {
+    margin: 1rem;
+}
+
+.leaflet-popup-close-button {
+    color: var(--text-secondary) !important;
+    font-size: 20px !important;
+    font-weight: normal !important;
+}
+
+.leaflet-popup-close-button:hover {
+    color: var(--text-primary) !important;
+}
+
+/* Attribution styling */
+.leaflet-control-attribution {
+    background: rgba(18, 18, 18, 0.8) !important;
+    color: var(--text-muted) !important;
+    font-size: 11px !important;
+}
+
+.leaflet-control-attribution a {
+    color: var(--text-secondary) !important;
+    text-decoration: none;
+}
+.leaflet-control-attribution a:hover {
+    color: var(--accent-primary) !important;
+}
+
+/* ===== Toast Animation Keyframes ===== */
+@keyframes slideOut {
+    to {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+}
+
+/* ===== Utility Classes ===== */
+.hidden {
+    display: none !important;
+}
+
+/* Disabled is handled on the layer-item itself now */
+
+/* ===== Additional Mobile Styles ===== */
+@media (max-width: 768px) {
+    .header-brand h1 {
+        font-size: 1.25rem;
+    }
+    
+    .header-subtitle {
+        display: none;
+    }
+    
+    .map-controls {
+        bottom: 1rem;
+        right: 1rem;
+        font-size: 0.75rem;
+    }
+}
