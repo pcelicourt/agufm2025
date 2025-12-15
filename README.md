@@ -43,6 +43,7 @@ python manage.py migrate
 ### 4.5 Replace the `INSTALLED_APPS` variable with:
 Here I have pre-created a new app named 'geowebapis' using the command 'python manage.py startapp geowebapis'.
 I have populated it with some contents necessary for the next steps of the activity.
+what you would need to do is to uncomment the app names as defined in the INSTALLED_APPS variable in the settings.py file.
 
 ```python
 INSTALLED_APPS = [
@@ -97,7 +98,8 @@ In this function, we need to spot the entry point or url to the server. It is: "
 The same applies for Line 39 and Line 96, but for Line 96, we have a different url "user-location/" which must be defined in the back-end as well. 
 
 ### 7.3 URL files
-We will start with solving the issue for the url /sensor/. 
+#### 7.3.1 Solving the issue for the url /sensor/.
+ 
 We will look at the urls.py in the geoweb folder (the entry point to our web application)
 We will uncomment (remove \# signe) before path('', include('geowebapis.urls')) to look like below:
 ```python
@@ -141,3 +143,6 @@ def sensor_data ():
 ![Get sensor information](https://effective-succotash-jj79g5j5g973x57-8000.app.github.dev/sensor/?sensor_name=CAF003)
 
 You should have a data structure similar to the code enclosed in the JsonResponse class.
+
+#### 7.3.2 Solving the issue for the url /user-location/.
+Note: instead of the geowebapis folder, the url for /user-location/ is setup in the geowebapp folder.
