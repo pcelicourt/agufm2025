@@ -32,12 +32,13 @@ Note that you must execute the following commands containing 'python -m manage .
 cd geoweb
 ```
 
-## 4.4 Check and run migrations 
+## 4.4 Check and run migrations in addition to the Django server
 
 In the Codespace terminal, you can check the content of the migrations files with the geoweb/geowebapp/migrations/ folder. Then, run the following command in the terminal.
 
 ```bash
 python manage.py migrate
+python manage.py runserver
 ```
 
 ### 4.5 Replace the `INSTALLED_APPS` variable with:
@@ -59,14 +60,20 @@ INSTALLED_APPS = [
     "rest_framework_gis",
 ]
 ```
+## 6. Launch the Django server and check the Codespace terminal
+```bash
+python manage.py runserver
+```
+You can select one sensor name or code in the Django app interface and check the terminal:
+![Launch CodeSpace](https://github.com/pcelicourt/aguassets/raw/main/images/urlnotfound.png)
 
-## 6. Files editing
-### 6.1 Template File
+## 7. Files editing to solve the URLs that are not found
+### 7.1 Template File
 we will click on and look at Line 97 of the template file: /geowebapp/templates/index.html
 We see the instruction: <script src="{% static 'js/eventhandler.js' %}"></script> 
 It indicates that there template must include a file named eventhandler.js located inside the /geoweb/static/ folder.
 
-### 6.2 Static File
+### 7.2 Static File
 We will click on and inspect that file /geoweb/static/eventhandler.js at three different points:
 
 Line 19: We see the following code that defines a function getSensorByName() to be called when user selects a sensor in the interface acoording to Line 53 of the template /geowebapp/static/index.html:
@@ -90,12 +97,9 @@ function getSensorByName() {
 In this function, we need to spot the entry point or url to the server. It is: "sensor/" that the function fetch will request and which must be defined in the backend. 
 The same applies for Line 39 and Line 96, but for Line 96, we have a different url "user-location/" which must be defined in the back-end as well. 
 
-### 6.3 URL files
+### 7.3 URL files
+We will start with the 
 
 
-Run the following to start the development server:
-```bash
-python manage.py runserver
-```
-If successful, your interface shoud look like:
-![Django WebGIS Successful Launch](https://github.com/pcelicourt/aguassets/raw/main/images/dataloadedinterface.png)
+
+
