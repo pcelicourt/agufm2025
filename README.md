@@ -38,7 +38,6 @@ In the Codespace terminal, you can check the content of the migrations files wit
 
 ```bash
 python manage.py migrate
-python manage.py runserver
 ```
 
 ### 4.5 Replace the `INSTALLED_APPS` variable with:
@@ -98,8 +97,28 @@ In this function, we need to spot the entry point or url to the server. It is: "
 The same applies for Line 39 and Line 96, but for Line 96, we have a different url "user-location/" which must be defined in the back-end as well. 
 
 ### 7.3 URL files
-We will start with the 
+We will start with solving the issue for the url /sensor/. 
+We will look at the urls.py in the geoweb folder (the entry point to our web application)
+We will uncomment (remove \# signe) before path('', include('geowebapis.urls')) to look like below:
+```python
+urlpatterns = [
+    path("admin/", admin.site.urls),
+    #path('', include('geowebapp.urls')),
+    path('', include('geowebapis.urls')),
+    path('', views.MainView.as_view(), name='home'),
+]```
 
+Refresh the page, select a sensor in the interface and check the terminal.
 
+Then, open the urls.py in the geowebapis folder, then uncomment the url paths to look like below:
+
+```python
+from .views import sensor_data, sampling_features
+urlpatterns = [
+    path('sensor/', sensor_data, name='sensor'),
+    #path('samplingfeatures/', sampling_features, name='samplingfeatures'),    
+] ```
+
+ Now Refresh the page, select a sensor in the interface and check the terminal.
 
 
