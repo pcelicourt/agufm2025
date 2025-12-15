@@ -233,11 +233,11 @@ class MainView(TemplateView):
         return {"map": figure._repr_html_(), 'title': 'Cook Agronomy Farm', 'sensors': sensors_json}
 
 
-userlocationfeaturegeotypecv = CV_SamplingFeatureGeoType.objects.filter(
-    term='point').first()
+def get_user_location_geotype():
+    return CV_SamplingFeatureGeoType.objects.filter(term='point').first()
 
-sampling_feature_type_cv = CV_SamplingFeatureType.objects.filter(
-    term="site").first()
+def get_sampling_feature_type():
+    return CV_SamplingFeatureType.objects.filter(term="site").first()
 
 
 @ensure_csrf_cookie
@@ -257,12 +257,12 @@ def store_user_location(request):
         user_location = SamplingFeatures(
             samplingfeatureuuid=str(uuid.uuid4()),
             samplingfeaturename=f'User Location {timestamp}',
-            samplingfeaturetypecv=sampling_feature_type_cv,
+            samplingfeaturetypecv=get_sampling_feature_type(),
             samplingfeaturecode=f'User_{timestamp}',
             samplingfeaturedescription='User Location from Browser',
             featuregeometry=wkt,
             featuregeometrywkt=wkt,
-            samplingfeaturegeotypecv=userlocationfeaturegeotypecv,
+            samplingfeaturegeotypecv=get_user_location_geotype(),
             elevation_m=-9999,
             # elevationdatumcv=elevation_datum_cv,
         )
