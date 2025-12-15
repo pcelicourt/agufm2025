@@ -121,4 +121,23 @@ urlpatterns = [
 
  Now Refresh the page, select a sensor in the interface and check the terminal.
 
+ Open the views.py module in the geowebapis folder and inspect the function sensor_data. You would see the following portion of codes starting with the keyword return:
+ ```python
+def sensor_data ():
+    ......
+    # Return structured JSON data
+    return JsonResponse({
+        'status': 'success',
+        'sensor_code': sensor_code,
+        'variable': variable,
+        'unit': unit,
+        'data': values_list,
+        'count': len(values_list)
+    })
+ ```
 
+ Now, type this link into the brower to request the same information as the click:
+ 
+![Get sensor information](https://effective-succotash-jj79g5j5g973x57-8000.app.github.dev/sensor/?sensor_name=CAF003)
+
+You should have a data structure similar to the code enclosed in the JsonResponse class.
