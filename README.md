@@ -59,8 +59,86 @@ INSTALLED_APPS = [
 ]
 ```
 
-## 5. Migrations command
-In the Codespace terminal, run the following command to migrate available data to the DB :
+## 5: Test how the ModelSerializer Class work in the console with the following commands
 ```bash
-python manage.py migrate
+python manage.py shell
+from geowebappapis.models import NonSpatialCities
+from geowebapis.serializer import NonSpatialCitiesModelSerializer
+montreal = NonSpatialCities(1, 'Montreal', 'Canada', 1.8, (45.50884, -73.58781), 'Quebec')
+serializer = NonSpatialCitiesModelSerializer(montreal)
+serializer.data
+exit()
+```
+
+## 6. Migrations command
+In the Codespace terminal, run the following command to create the migrations for the models module of the geowebapis app :
+```bash
+python manage.py makemigrations geowebapis
+python manage.py migrate geowebapis
+python manage.py makemigrations --empty geowebapis
+```
+
+## 7. Populate the new migration file created
+
+```bash
+from django.db import migrations
+
+import os
+import pandas as pd
+
+import geopandas as gpd
+from shapely.geometry import Point, LineString, Polygon
+from django.contrib.gis.geos import fromstr
+
+def read_countries_data(country_code):
+    file_path = f"./geowebapis/static/data/json/{country_code}.json"
+    full_file_path = os.path.abspath(file_path)
+    country_gdf = gpd.read_file(full_file_path)
+    country_gdf['eng_name'] = country_gdf['name']
+    country_gdf['code'] = f"{country_code}"
+    return country_gdf
+
+def read_cities_data_as_gdf(country_code=None):
+    file_path = './geowebapis/static/data/csv/canadacities.csv'
+    full_file_path = os.path.abspath(file_path)
+    cities = pd.read_csv(full_file_path, delimiter=',')
+    cities["Coordinates"] = list(zip(cities.lng, cities.lat)) 
+    cities["Coordinates"] = cities["Coordinates"].apply(Point)
+    cities_gdf = gpd.GeoDataFrame(cities, geometry="Coordinates")
+    if country_code:
+        cities_gdf = cities_gdf[cities_gdf.province_id == f"{country_code}"].sample(50).reset_index().drop('index', axis='columns')   
+    cities_gdf = cities_gdf[['id', 'City', 'Coordinates', 'province_id']]
+    return cities_gdf
+
+def load_data_to_db(apps, schema_editor):
+    Countries = apps.get_model('geowebapis', 'Countries')
+    country_gdf = read_countries_data('SK')
+    for index, country in country_gdf.iterrows():
+        country_name = country['name']
+        country_name_eng = country['eng_name']
+        country_code = country['code']
+        country_geometry = fromstr(str(country['geometry']), srid=4326)
+        Countries(country_name=country_name, country_name_eng=country_name_eng,
+                country_code=country_code, geom=country_geometry).save()
+
+    Cities = apps.get_model('geowebapis', 'Cities')
+    cities_gdf = read_cities_data_as_gdf()
+    #provinces_data = Provinces.objects.all().values()
+    #provinces_data = Provinces.objects.values_list('country_code', 'country_id')
+    for index, city in cities_gdf.iterrows():
+        city_name = city['City']
+        city_geometry = fromstr(str(city['Coordinates']), srid=4326)
+        province_id = city['province_id']
+        province_id = Countries.objects.filter(country_code=province_id).first()
+        Cities(city_name=city_name, location=city_geometry, country_id=province_id).save()
+
+class Migration(migrations.Migration):
+
+    dependencies = [
+        ('geowebapp', '0001_initial'),
+    ]
+
+    operations = [
+        migrations.RunPython(load_data_to_db)
+    ]
 ```
