@@ -41,7 +41,7 @@ def load_data_to_db(apps, schema_editor):
                 country_code=country_code, geom=country_geometry).save()
 
     Cities = apps.get_model('geowebapis', 'Cities')
-    cities_gdf = read_cities_data_as_gdf()
+    cities_gdf = read_cities_data_as_gdf('SK')
     #provinces_data = Provinces.objects.all().values()
     #provinces_data = Provinces.objects.values_list('country_code', 'country_id')
     for index, city in cities_gdf.iterrows():
@@ -54,7 +54,7 @@ def load_data_to_db(apps, schema_editor):
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('geowebapp', '0001_initial'),
+        ('geowebapis', '0001_initial'),
     ]
 
     operations = [

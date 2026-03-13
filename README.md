@@ -78,7 +78,7 @@ python manage.py migrate geowebapis
 python manage.py makemigrations --empty geowebapis
 ```
 
-## 7. Populate the new migration file created
+## 7. Populate the new migration file created. It starts with 0002_auto....
 
 ```bash
 from django.db import migrations
@@ -135,10 +135,14 @@ def load_data_to_db(apps, schema_editor):
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('geowebapp', '0001_initial'),
+        ('geowebapis', '0001_initial'),
     ]
 
     operations = [
         migrations.RunPython(load_data_to_db)
     ]
+```
+## 8: load the data into the DB
+```bash
+python manage.py migrate geowebapis
 ```
