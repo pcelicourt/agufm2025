@@ -62,7 +62,7 @@ INSTALLED_APPS = [
 ## 5: Test how the ModelSerializer Class work in the console with the following commands
 ```bash
 python manage.py shell
-from geowebappapis.models import NonSpatialCities
+from geowebapis.models import NonSpatialCities
 from geowebapis.serializer import NonSpatialCitiesModelSerializer
 montreal = NonSpatialCities(1, 'Montreal', 'Canada', 1.8, (45.50884, -73.58781), 'Quebec')
 serializer = NonSpatialCitiesModelSerializer(montreal)
