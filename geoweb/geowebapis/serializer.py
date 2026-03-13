@@ -1,5 +1,6 @@
 from rest_framework_gis import serializers
 from geowebapis.models import NonSpatialCities, Countries, Cities
+from django.http import JsonResponse
 
 
 class NonSpatialCitiesModelSerializer(serializers.ModelSerializer):
@@ -14,5 +15,5 @@ class CitiesSerializers(serializers.GeoFeatureModelSerializer):
     class Meta:
         app_label  = 'geowebapis'
         model = Cities
-        geo_field = "geom"
+        geo_field = "location"
         fields = ('city_id', 'city_name', 'country_id_id')

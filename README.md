@@ -122,7 +122,7 @@ def load_data_to_db(apps, schema_editor):
                 country_code=country_code, geom=country_geometry).save()
 
     Cities = apps.get_model('geowebapis', 'Cities')
-    cities_gdf = read_cities_data_as_gdf()
+    cities_gdf = read_cities_data_as_gdf('SK')
     #provinces_data = Provinces.objects.all().values()
     #provinces_data = Provinces.objects.values_list('country_code', 'country_id')
     for index, city in cities_gdf.iterrows():
@@ -145,4 +145,17 @@ class Migration(migrations.Migration):
 ## 8: load the data into the DB
 ```bash
 python manage.py migrate geowebapis
+```
+
+## 9: Commands to execute in the CodesSpaces Terminal
+```bash
+python manage.py shell
+from geowebapis.models import Cities
+from geowebapis.serializer import CitiesSerializers
+from django.http import JsonResponse
+cities = Cities.objects.all()[:20]
+serialized_cities = CitiesSerializers(cities, many=True)
+serialized_cities.data
+print(JsonResponse(serialized_cities.data).content)
+exit()
 ```

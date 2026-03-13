@@ -11,7 +11,8 @@ class NonSpatialCities(models.Model):
 
     class Meta:
         app_label = 'geowebapis'
-
+        managed = True
+        
 
 class Countries(models.Model):
     country_id = models.AutoField(primary_key=True)
