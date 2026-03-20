@@ -20,6 +20,5 @@ from django.urls import path, include
 
 urlpatterns = [
     path('', include('geowebapp.urls')),
-    path('api/', include('geowebapis.urls')),
     path('admin/', admin.site.urls),
 ]

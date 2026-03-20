@@ -159,3 +159,116 @@ serialized_cities.data
 print(JsonResponse(serialized_cities.data).content)
 exit()
 ```
+
+## 10: Steps to create a simple API with an OMD2-powered DB
+
+### 10.1: create the Views or responses that our api will return in geowebapis/views.py with the codes below:
+```bash
+from django.shortcuts import render
+from django.http import JsonResponse
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from rest_framework import status
+
+from geowebapp.models import SamplingFeatures #Our model is import from the geowebapp!
+from .serializer import SamplingFeatureSerializers 
+
+
+# Create your views here.
+@api_view(['GET'])
+def get_full_metadata(request):
+    all_features = SamplingFeatures.objects.all()
+    serializer = SamplingFeatureSerializers(all_features, many=True)
+    return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+@api_view(['GET'])
+def get_farm_metadata(request):
+    ferme = SamplingFeatures.objects.filter(
+        samplingfeaturecode='CookAgronomyFarm')
+    serializer = SamplingFeatureSerializers(ferme, many=True)
+    return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+@api_view(['GET'])
+def get_sensors_metadata(request):
+    sensors = SamplingFeatures.objects.filter(
+        samplingfeaturecode__istartswith='CAF')
+    serializer = SamplingFeatureSerializers(sensors, many=True)
+    return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+@api_view(['GET'])
+def get_single_sensor_metadata(request, sensorid):
+    if 'CAF' in sensorid:
+        sensors = SamplingFeatures.objects.filter(samplingfeaturecode=sensorid)
+        serializer = SamplingFeatureSerializers(sensors, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    else:
+        return Response({}, status=status.HTTP_200_OK)
+
+```
+
+### 10.2: create the Serializer (SamplingFeatureSerializers) for geospatial data transformation with the codes below in geowebapis/serializer.py:
+Note that we have used the first two serializers previously
+```bash
+from rest_framework_gis import serializers
+
+from geowebapis.models import NonSpatialCities, Countries, Cities
+from geowebapp.models import SamplingFeatures #Our model is import from the geowebapp!
+
+
+class NonSpatialCitiesModelSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = NonSpatialCities
+        fields = ['city_id', 'city_name', 'country',
+                  'population', 'geolocation', 'province']
+
+
+class CitiesSerializers(serializers.GeoFeatureModelSerializer):
+    """ A class to serialize locations as GeoJSON compatible data """
+
+    class Meta:
+        app_label = 'geowebapis'
+        model = Cities
+        geo_field = "location"
+        fields = ('city_id', 'city_name', 'country_id_id')
+
+
+class SamplingFeatureSerializers(serializers.GeoFeatureModelSerializer):
+    """ A class to serialize locations as GeoJSON compatible data """
+
+    class Meta:
+        app_label = 'geowebapis'
+        model = SamplingFeatures
+        geo_field = "featuregeometry"
+        fields = '__all__'
+```
+
+### 10.3: Configure the entry URLConf  with the codes below in geoweb/urls.py:
+Add this line to the urlpatterns list 
+```bash
+    path('api/', include('geowebapis.urls')),
+```
+after the first the most generic path which is the line below:
+```bash
+urlpatterns = [
+    path('', include('geowebapp.urls')),
+
+]
+```
+
+### 10.4: Configure the Web Service URLConf  with the codes below in geowebapis/urls.py:
+Note that each of these patterns correspond to a View in geowebapis/views.py
+```bash
+from django.urls import path, include
+from . import views
+
+urlpatterns = [
+    path('', views.get_full_metadata, name='full_metadata'),
+    path('farm/', views.get_farm_metadata, name='farm_metadata'),
+    path('farm/sensors/', views.get_sensors_metadata, name='sensors_metadata'),
+    path('farm/sensors/sensor/<str:sensorid>/',
+         views.get_single_sensor_metadata, name='sensor'),
+]
+```
