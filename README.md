@@ -20,9 +20,7 @@ In the Codespace terminal, run the following commands.
 
 ```bash
 source .venv/bin/activate
-python --version
 pip install -r requirements.txt
-python -m django --version
 ```
 
 ### 4.3. Change into the `geoweb` directory
@@ -161,8 +159,16 @@ exit()
 ```
 
 ## 10: Steps to create a simple API with an OMD2-powered DB
-
-### 10.1: create the Views or responses that our api will return in geowebapis/views.py with the codes below:
+NOTE: You must have completed Steps 4 before these ones
+### 10.0: Run the following commands to prepare your environment:
+```bash
+source .venv/bin/activate
+pip install -r requirements.txt
+cd geoweb
+python manage.py migrate geowebapis
+python manage.py migrate geowebapp
+```
+### 10.1: create the Views or responses that our api will return by copying the codes below in geowebapis/views.py :
 ```bash
 from django.shortcuts import render
 from django.http import JsonResponse
@@ -272,3 +278,16 @@ urlpatterns = [
          views.get_single_sensor_metadata, name='sensor'),
 ]
 ```
+### 10.4: Run the following command to launch your server:
+```bash
+python manage.py runserver
+```
+If everything goes well, you should see a display like below in your terminal:
+```bash
+Django version 4.2.11, using settings 'geoweb.settings'
+Starting development server at http://127.0.0.1:8000/
+Quit the server with CONTROL-C.
+```
+You can now click on the link http://127.0.0.1:8000/ to display your app in the browser.
+In the browser, you could try: http://127.0.0.1:8000/api/farm/sensors/sensor/CAF003/ which is one of the url pattern we configured and see what happens!
+You can change the format using: http://127.0.0.1:8000/api/farm/sensors/sensor/CAF003/?format=json
