@@ -1,59 +1,83 @@
-# Tutorial \#3 for the American Geophysical Union Fall Meeting 2025
-This tutorial will help you load spatial and timeseries data into the ODM2-based DB.
+# Tutoriel n° 1 : École d'été 2026 du RQRAD
 
-## 1. Connect to your existing account
+Ce tutoriel vous aidera à charger des données spatiales et des séries temporelles dans la base de données fondée sur ODM2.
 
+
+- [Se connecter avec GitHub](https://github.com/login?)
+## 1. Créer un compte GitHub OU se connecter à votre compte existant
+
+- [GitHub Signup](https://github.com/signup?ref_cta=Sign+up&ref_loc=header+logged+out&ref_page=%2F&source=header-home)  
 - [GitHub Sign in](https://github.com/login?)
 
-## 2. Access the workshop GitHub repository
+## 2. Accéder au dépôt GitHub de l’atelier
 
-Click the following link to open the workshop repository: [AGUFM 2025 Workshop GitHub Repo](https://github.com/pcelicourt/agufm2025/tree/odm2loader).
+Cliquez sur le lien suivant pour ouvrir le dépôt de l’atelier :
 
-## 3. Create a codespace from the branch geodjangoapp
+[**Dépôt GitHub de l’atelier **](https://github.com/pcelicourt/agufm2025/tree/rqrad2026)
 
-With the branch geodjangoapp selected in the agufm202 repo, click the + sign to create a codespace from the branch as demonstrated in the image below:
+## 3. Créer un Codespace à partir de la branche `rqrad2026`
 
-![Launch CodeSpace](https://github.com/pcelicourt/aguassets/raw/main/images/odm2loaderlaunch.png)
+Une fois la branche `rqrad2026` sélectionnée dans le dépôt `agufm2025`, cliquez sur le signe `+` pour créer un Codespace à partir de cette branche, comme illustré dans l’image ci-dessous :
 
-## 4. Codespace development environment
+![Lancer le Codespace](https://github.com/pcelicourt/aguassets/blob/main/images/rqrad.png)
 
-Your Codespace development environment should look similar to this:
+## 4. Environnement de développement du Codespace
 
-![CodeSpace Terminal](https://github.com/pcelicourt/aguassets/raw/main/images/odm2loadercodespace.png)
+Votre environnement de développement Codespace devrait ressembler à ceci :
 
-## 5. Continue the Django WebGIS Application development
-In the Codespace terminal, run the following commands.
+![Terminal du Codespace](https://github.com/pcelicourt/aguassets/raw/main/images/odm2loadercodespace.png)
 
-### 5.1. Verify Python and Django versions in the Codespace terminal
+## 5. Poursuivre le développement de l’application
+
+Dans le terminal du Codespace, exécutez les commandes suivantes.
+
+### 5.1. Activer l'environnement virtuel et installer les bibliothèques
+
+Dans le terminal du Codespace, exécutez les commandes suivantes :
 
 ```bash
 source .venv/bin/activate
-python --version
 pip install -r requirements.txt
-python -m django --version
 ```
 
-### 5.3. Change into the `geoweb` directory
-Note that you must execute the following commands containing 'python -m manage ...' or 'python manage.py ...' within the geoweb folder.
+### 5.2. Accéder au répertoire racine `geoweb`
+
+Vous devez exécuter les commandes contenant `python -m manage ...` ou `python manage.py ...` à l’intérieur du dossier `geoweb`.
 
 ```bash
 cd geoweb
 ```
 
-## 5.4 Check and run migrations 
+### 5.3. Vérifier et exécuter les migrations
 
-In the Codespace terminal, you can check the content of the migrations files with the geoweb/geowebapp/migrations/ folder. Then, run the following command in the terminal.
+Dans le terminal du Codespace, vous pouvez vérifier le contenu des fichiers de migration dans le dossier suivant :
+
+```text
+geoweb/geowebapp/migrations/
+```
+
+Ensuite, exécutez la commande suivante dans le terminal :
 
 ```bash
 python manage.py migrate
 ```
-## 6. Check the results and start the development server
-In the Codespace terminal, content similar to the image should be printed for command 'python manage.py migrates'.
-![Django Successful Migrations](https://github.com/pcelicourt/aguassets/raw/main/images/initialmigration.png)
 
-Run the following to start the development server:
+## 6. Vérifier les résultats et démarrer le serveur de développement
+
+Dans le terminal du Codespace, un contenu similaire à celui de l’image devrait s’afficher après l’exécution de la commande suivante :
+
+```bash
+python manage.py migrate
+```
+
+![Migrations Django réussies](https://github.com/pcelicourt/aguassets/raw/main/images/initialmigration.png)
+
+Exécutez la commande suivante pour démarrer le serveur de développement :
+
 ```bash
 python manage.py runserver
 ```
-If successful, your interface shoud look like:
-![Django WebGIS Successful Launch](https://github.com/pcelicourt/aguassets/raw/main/images/dataloadedinterface.png)
+
+Si le lancement est réussi, votre interface devrait ressembler à ceci :
+
+![Lancement réussi de Django WebGIS](https://github.com/pcelicourt/aguassets/raw/main/images/dataloadedinterface.png)
