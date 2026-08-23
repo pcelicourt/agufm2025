@@ -3,7 +3,7 @@ from django.db import migrations
 import csv
 from pathlib import Path
 
-
+# Define the mapping of model names from models.py to their corresponding CSV file paths
 cv_files_path = {"CV_SamplingFeatureType": "static/data/odm2cv/samplingfeaturetype.csv",
                   "CV_SamplingFeatureGeoType": "static/data/odm2cv/samplingfeaturegeotype.csv",
                   "CV_ElevationDatum": "static/data/odm2cv/elevationdatum.csv",
@@ -26,29 +26,30 @@ cv_files_path = {"CV_SamplingFeatureType": "static/data/odm2cv/samplingfeaturety
                   "CV_DataQualityType": "static/data/odm2cv/dataqualitytype.csv",
                 }
 
-
+# Function to load CSV data into the corresponding models
 def load_cvs(apps, schema_editor):
     for model_name, file_path in cv_files_path.items():
-        model = apps.get_model('geowebapp', model_name)
-        full_file_path = Path(__file__).resolve().parent.parent / file_path
+        model = apps.get_model('geowebapp', model_name) # model = apps.get_model('geowebapp', "CV_SamplingFeatureType")
+        full_file_path = Path(__file__).resolve().parent.parent / file_path # Get the full path to the CSV file relative to the current migration file
+
         with open(full_file_path, newline='\n', encoding="utf8") as csvfile:
             cvs = csv.reader(csvfile, delimiter=',')
-            next(cvs)
+            next(cvs) # Skip the header row of the CSV file
             for cv in cvs:
-                term, name, definition, category, sourcevocabularyuri, _, _ = cv
+                term, name, definition, category, sourcevocabularyuri, _, _ = cv # Unpack the values from the CSV row
                 model(term=term, name=name,
                       definition=definition, category=category,
                       sourcevocabularyuri=sourcevocabularyuri
-                    ).save()
+                    ).save() # Create and save a new instance of the model with the values from the CSV row
 
-
+# Define the migration class
 class Migration(migrations.Migration):
 
     dependencies = [
-        ("geowebapp", "0001_initial"),
+        ("geowebapp", "0001_initial"), # Specify the dependency on the initial migration of the geowebapp app
     ]
 
     operations = [
-        migrations.RunPython(load_cvs)
+        migrations.RunPython(load_cvs) # Run the load_cvs function to populate the models with data from the CSV files
     ]
 

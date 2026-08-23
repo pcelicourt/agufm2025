@@ -21,10 +21,9 @@ def load_sensors_location_data(apps, schema_editor):
 
     # Les tables requises pour l'insertion des données spatiales
     SamplingFeatures = apps.get_model('geowebapp', 'SamplingFeatures')
-    CV_SamplingFeatureType = apps.get_model(
-        'geowebapp', 'CV_SamplingFeatureType')
-    CV_SamplingFeatureGeoType = apps.get_model(
-        'geowebapp', 'CV_SamplingFeatureGeoType')
+    CV_SamplingFeatureType = apps.get_model('geowebapp', 'CV_SamplingFeatureType')
+    CV_SamplingFeatureGeoType = apps.get_model('geowebapp', 'CV_SamplingFeatureGeoType')
+    
     RelatedFeatures = apps.get_model('geowebapp', 'RelatedFeatures')
     CV_RelationshipType = apps.get_model('geowebapp', 'CV_RelationshipType')
 
@@ -42,20 +41,15 @@ def load_sensors_location_data(apps, schema_editor):
     ActionBy = apps.get_model('geowebapp', 'ActionBy')
     FeatureActions = apps.get_model('geowebapp', 'FeatureActions')
 
-    sampling_feature_type_cv = CV_SamplingFeatureType.objects.filter(
-        term="site").first()
+    sampling_feature_type_cv = CV_SamplingFeatureType.objects.filter(term="site").first()
     elevation_datum_cv = CV_ElevationDatum.objects.filter(term="MSL").first()
 
-    action_type_cv = CV_ActionType.objects.filter(
-        term="instrumentDeployment").first()
-    method_type_cv = CV_MethodType.objects.filter(
-        term="instrumentDeployment").first()
+    action_type_cv = CV_ActionType.objects.filter(term="instrumentDeployment").first()
+    method_type_cv = CV_MethodType.objects.filter(term="instrumentDeployment").first()
     organization = Organizations.objects.filter(organizationcode='WSU').first()
-    affiliation = Affiliations.objects.filter(
-        primaryemail='dave.brown@wsu.edu').first()
+    affiliation = Affiliations.objects.filter(primaryemail='dave.brown@wsu.edu').first()
 
-    relationship_type_cv = CV_RelationshipType.objects.filter(
-        term='isLocatedAt').first()
+    relationship_type_cv = CV_RelationshipType.objects.filter(term='isLocatedAt').first()
 
     for _, sensor in sensors_location.iterrows():
         parcel_code = sensor.Strip

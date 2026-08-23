@@ -39,20 +39,15 @@ def load_parcels_polygon_data(apps, schema_editor):
     ActionBy = apps.get_model('geowebapp', 'ActionBy')
     FeatureActions = apps.get_model('geowebapp', 'FeatureActions')
 
-    sampling_feature_type_cv = CV_SamplingFeatureType.objects.filter(
-        term="fieldArea").first()
+    sampling_feature_type_cv = CV_SamplingFeatureType.objects.filter(term="fieldArea").first()
     elevation_datum_cv = CV_ElevationDatum.objects.filter(term="MSL").first()
 
-    action_type_cv = CV_ActionType.objects.filter(
-        term="genericNonObservation").first()
-    method_type_cv = CV_MethodType.objects.filter(
-        term="genericNonObservation").first()
+    action_type_cv = CV_ActionType.objects.filter(term="genericNonObservation").first()
+    method_type_cv = CV_MethodType.objects.filter(term="genericNonObservation").first()
     organization = Organizations.objects.filter(organizationcode='WSU').first()
-    affiliation = Affiliations.objects.filter(
-        primaryemail='dave.brown@wsu.edu').first()
+    affiliation = Affiliations.objects.filter(primaryemail='dave.brown@wsu.edu').first()
 
-    relationship_type_cv = CV_RelationshipType.objects.filter(
-        term='isPartOf').first()
+    relationship_type_cv = CV_RelationshipType.objects.filter(term='isPartOf').first()
 
     parcels_data = parcels_data.to_crs(3857)
     wkt = shapely.to_wkt(
@@ -80,8 +75,7 @@ def load_parcels_polygon_data(apps, schema_editor):
         )
         parcel_feature.save()
 
-        related_feature = SamplingFeatures.objects.filter(
-            samplingfeaturecode=f"Field{field_code}").first()
+        related_feature = SamplingFeatures.objects.filter(samplingfeaturecode=f"Field{field_code}").first()
 
         related_feature = RelatedFeatures(
             samplingfeatureid=parcel_feature,

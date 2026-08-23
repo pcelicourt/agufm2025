@@ -3,17 +3,19 @@ from datetime import date
 
 from django.db import migrations
 
-
+# Define the function to load contact data into the database (we will work with the Organizations (1), People (2), and Affiliations (3) models)
 def load_contact_data(apps, schema_editor):
-    Organizations = apps.get_model('geowebapp', 'Organizations')
-    CV_OrganizationType = apps.get_model('geowebapp', 'CV_OrganizationType')
+    Organizations = apps.get_model('geowebapp', 'Organizations') # Get the Organizations model from the geowebapp app
+    CV_OrganizationType = apps.get_model('geowebapp', 'CV_OrganizationType') # Get the CV_OrganizationType model from the geowebapp app
 
-    People = apps.get_model('geowebapp', 'People')
+    People = apps.get_model('geowebapp', 'People') # Get the People model from the geowebapp app
 
-    Affiliations = apps.get_model('geowebapp', 'Affiliations')
+    Affiliations = apps.get_model('geowebapp', 'Affiliations') # Get the Affiliations model from the geowebapp app
 
-    organization_type = CV_OrganizationType.objects.filter(term='university').first()
+    organization_type = CV_OrganizationType.objects.filter(term='university').first() # Get the first instance of CV_OrganizationType with the term 'university'
 
+    # Create and save a new instance of the Organizations model with the specified attributes
+    # You could add your own organization details here, or modify the existing ones as needed
     organization = Organizations(
         organizationcode='WSU',
         organizationname='Washington State University',
@@ -23,12 +25,14 @@ def load_contact_data(apps, schema_editor):
     )
     organization.save()
 
+    # Create and save a new instance of the People model with the specified attributes
     contact_person = People(
         personfirstname='David',
         personlastname='Brown'
     )
     contact_person.save()
 
+    # Create and save a new instance of the Affiliations model with the specified attributes
     affiliation = Affiliations(
         personid=contact_person,
         organizationid=organization,

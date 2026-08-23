@@ -2,14 +2,14 @@
 
 from django.db import migrations
 from django.utils import timezone
+from django.db import transaction
 import uuid
 import pandas as pd
 from datetime import datetime, date
 from glob import glob
 
 
-sensors_data_files = glob(
-    './geowebapp/static/data/farming/sensors/Daily/CAF*.txt')
+sensors_data_files = glob('./geowebapp/static/data/farming/sensors/Daily/CAF*.txt')
 
 
 def load_sensor_data(apps, schema_editor):
@@ -23,8 +23,7 @@ def load_sensor_data(apps, schema_editor):
 
     ProcessingLevels = apps.get_model('geowebapp', 'ProcessingLevels')
     TaxonomicClassifiers = apps.get_model('geowebapp', 'TaxonomicClassifiers')
-    CV_TaxonomicClassifierType = apps.get_model(
-        'geowebapp', 'CV_TaxonomicClassifierType')
+    CV_TaxonomicClassifierType = apps.get_model('geowebapp', 'CV_TaxonomicClassifierType')
 
     FeatureActions = apps.get_model('geowebapp', 'FeatureActions')
     CV_ResultType = apps.get_model('geowebapp', 'CV_ResultType')
@@ -35,12 +34,10 @@ def load_sensor_data(apps, schema_editor):
     SamplingFeatures = apps.get_model('geowebapp', 'SamplingFeatures')
 
     TimeSeriesResults = apps.get_model('geowebapp', 'TimeSeriesResults')
-    CV_AggregationStatistic = apps.get_model(
-        'geowebapp', 'CV_AggregationStatistic')
+    CV_AggregationStatistic = apps.get_model('geowebapp', 'CV_AggregationStatistic')
     SpatialReferences = apps.get_model('geowebapp', 'SpatialReferences')
 
-    TimeSeriesResultValues = apps.get_model(
-        'geowebapp', 'TimeSeriesResultValues')
+    TimeSeriesResultValues = apps.get_model('geowebapp', 'TimeSeriesResultValues')
     CV_CensorCode = apps.get_model('geowebapp', 'CV_CensorCode')
     CV_QualityCode = apps.get_model('geowebapp', 'CV_QualityCode')
 
@@ -49,13 +46,11 @@ def load_sensor_data(apps, schema_editor):
     status = CV_Status.objects.filter(term='unknown').first()
     result_type = CV_ResultType.objects.filter(
         term='categoryObservation').first()
-    taxonomic_classifier_cv = CV_TaxonomicClassifierType.objects.filter(
-        term='Hydrology').first()
+    taxonomic_classifier_cv = CV_TaxonomicClassifierType.objects.filter(term='Hydrology').first()
     sample_medium = CV_Medium.objects.filter(term='soil').first()
     censor_code = CV_CensorCode.objects.filter(term='unknown').first()
     data_quality_code = CV_QualityCode.objects.filter(term='unknown').first()
-    aggregation_statistic = CV_AggregationStatistic.objects.filter(
-        term='unknown').first()
+    aggregation_statistic = CV_AggregationStatistic.objects.filter(term='unknown').first()
 
     spatial_reference = SpatialReferences(
         srscode='epsg:3857',
@@ -142,6 +137,7 @@ def load_sensor_data(apps, schema_editor):
     )
     processing_level.save()
 
+
     for file_path in sensors_data_files:
 
         sensor_data = pd.read_csv(file_path, sep='\t', na_values='NA').dropna()
@@ -153,6 +149,13 @@ def load_sensor_data(apps, schema_editor):
 
         xlocation = sampling_feature.featuregeometry.coords[0]
         ylocation = sampling_feature.featuregeometry.coords[1]
+
+        soil_moisture_results_bulk = []
+        soil_moisture_timeseries_results_bulk = []
+        soil_moisture_timeseries_results_values_bulk = []
+        temperature_results_bulk = []
+        temperature_timeseries_results_bulk = []
+        temperature_timeseries_results_values_bulk = []
 
         for data in sensor_data.itertuples():
             result_time = [int(date_component)
@@ -172,7 +175,8 @@ def load_sensor_data(apps, schema_editor):
                 processinglevelid=processing_level,
                 # taxonomicclassifierid=taxonomic_classifier.taxonomicclassifierid
             )
-            soil_moisture_results.save()
+            soil_moisture_results_bulk.append(soil_moisture_results)
+            #soil_moisture_results.save()
 
             soil_moisture_timeseries_results = TimeSeriesResults(
                 resultid=soil_moisture_results,
@@ -187,7 +191,8 @@ def load_sensor_data(apps, schema_editor):
                 intendedtimespacing=1,
                 intendedtimespacingunitsid=time_units
             )
-            soil_moisture_timeseries_results.save()
+            #soil_moisture_timeseries_results.save()
+            soil_moisture_timeseries_results_bulk.append(soil_moisture_timeseries_results)
 
             soil_moisture_timeseries_results_values = TimeSeriesResultValues(
                 resultid=soil_moisture_timeseries_results,
@@ -200,7 +205,8 @@ def load_sensor_data(apps, schema_editor):
                 censorcodecv=censor_code,
                 qualitycodecv=data_quality_code,
             )
-            soil_moisture_timeseries_results_values.save()
+            soil_moisture_timeseries_results_values_bulk.append(soil_moisture_timeseries_results_values)
+            #soil_moisture_timeseries_results_values.save()
 
             temperature_results = Results(
                 resultuuid=str(uuid.uuid4()),
@@ -216,7 +222,8 @@ def load_sensor_data(apps, schema_editor):
                 processinglevelid=processing_level,
                 # taxonomicclassifierid=taxonomic_classifier.taxonomicclassifierid
             )
-            temperature_results.save()
+            temperature_results_bulk.append(temperature_results)
+            #temperature_results.save()
 
             temperature_timeseries_results = TimeSeriesResults(
                 resultid=temperature_results,
@@ -231,7 +238,8 @@ def load_sensor_data(apps, schema_editor):
                 intendedtimespacing=1,
                 intendedtimespacingunitsid=time_units
             )
-            temperature_timeseries_results.save()
+            temperature_timeseries_results_bulk.append(temperature_timeseries_results)
+            #temperature_timeseries_results.save()
 
             temperature_timeseries_results_values = TimeSeriesResultValues(
                 resultid=temperature_timeseries_results,
@@ -244,8 +252,16 @@ def load_sensor_data(apps, schema_editor):
                 censorcodecv=censor_code,
                 qualitycodecv=data_quality_code,
             )
-            temperature_timeseries_results_values.save()
+            temperature_timeseries_results_values_bulk.append(temperature_timeseries_results_values)
+            #temperature_timeseries_results_values.save()
+        with transaction.atomic():
+            Results.objects.bulk_create(soil_moisture_results_bulk, batch_size=2000, ignore_conflicts=True)
+            TimeSeriesResults.objects.bulk_create(soil_moisture_timeseries_results_bulk, batch_size=2000, ignore_conflicts=True)
+            TimeSeriesResultValues.objects.bulk_create(soil_moisture_timeseries_results_values_bulk, batch_size=2000, ignore_conflicts=True)
 
+            Results.objects.bulk_create(temperature_results_bulk, batch_size=2000, ignore_conflicts=True)
+            TimeSeriesResults.objects.bulk_create(temperature_timeseries_results_bulk, batch_size=2000, ignore_conflicts=True)
+            TimeSeriesResultValues.objects.bulk_create(temperature_timeseries_results_values_bulk, batch_size=2000, ignore_conflicts=True)
 
 class Migration(migrations.Migration):
 

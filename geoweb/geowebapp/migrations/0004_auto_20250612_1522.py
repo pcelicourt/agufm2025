@@ -22,10 +22,8 @@ def load_farm_polygon_data(apps, schema_editor):
 
     # Les tables requises pour l'insertion des données spatiales
     SamplingFeatures = apps.get_model('geowebapp', 'SamplingFeatures')
-    CV_SamplingFeatureType = apps.get_model(
-        'geowebapp', 'CV_SamplingFeatureType')
-    CV_SamplingFeatureGeoType = apps.get_model(
-        'geowebapp', 'CV_SamplingFeatureGeoType')
+    CV_SamplingFeatureType = apps.get_model('geowebapp', 'CV_SamplingFeatureType')
+    CV_SamplingFeatureGeoType = apps.get_model('geowebapp', 'CV_SamplingFeatureGeoType')
     CV_ElevationDatum = apps.get_model('geowebapp', 'CV_ElevationDatum')
 
     Organizations = apps.get_model('geowebapp', 'Organizations')
@@ -40,10 +38,9 @@ def load_farm_polygon_data(apps, schema_editor):
     ActionBy = apps.get_model('geowebapp', 'ActionBy')
     FeatureActions = apps.get_model('geowebapp', 'FeatureActions')
 
-    sampling_feature_type_cv = CV_SamplingFeatureType.objects.filter(
-        term="fieldArea").first()
+    sampling_feature_type_cv = CV_SamplingFeatureType.objects.filter(term="fieldArea").first()
 
-    # to convert the Geometry type to match the CV in the ODM
+    # To convert the Geometry type to match the CV in the ODM
     geotype = farm.geometry.type[0]
     samplingfeaturegeotypecv = CV_SamplingFeatureGeoType.objects.filter(
         term=geotype[0].lower() + geotype[1:]).first()
@@ -64,13 +61,10 @@ def load_farm_polygon_data(apps, schema_editor):
     )
     farm_feature.save()
 
-    action_type_cv = CV_ActionType.objects.filter(
-        term="genericNonObservation").first()
-    method_type_cv = CV_MethodType.objects.filter(
-        term="genericNonObservation").first()
+    action_type_cv = CV_ActionType.objects.filter(term="genericNonObservation").first()
+    method_type_cv = CV_MethodType.objects.filter(term="genericNonObservation").first()
     organization = Organizations.objects.filter(organizationcode='WSU').first()
-    affiliation = Affiliations.objects.filter(
-        primaryemail='dave.brown@wsu.edu').first()
+    affiliation = Affiliations.objects.filter(primaryemail='dave.brown@wsu.edu').first()
 
     method = Methods(
         methodtypecv=method_type_cv,
