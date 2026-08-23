@@ -87,7 +87,7 @@ Exécutez la commande suivante dans le terminal de CodeSpace
 #Cette commande crée un nouveau fichier `000X_auto_YYYYMMDD_HHMM.py` (ex: 0002_auto_20250611_1156.py) dans le dossier `geoweb/geowebapp/migrations`
 python manage.py makemigrations --empty geowebapp
 ```
-Localiser le fichier créé, remplacer tout son contenu par les codes Python suivants (copier de la ligne 93 à 146) 
+Localiser le fichier créé, remplacer tout son contenu par les codes Python suivants (copier de la ligne 94 à 147) 
 puis sauvegarder le fichier. Assurez-vous de remplacer le pas d'accès et le nom de table manquants dans le dictionnaire cv_files_path
 
 ```bash
@@ -147,13 +147,22 @@ class Migration(migrations.Migration):
     ]
 ```
 
+
 Exécuter la commande suivante dans le terminal de CodeSpace pour insérer les vocabulaires contrôlés dans les tables correspondantes
 ```bash
-#Cette commande crée un nouveau fichier `0001_initial.py` dans le dossier `geoweb/geowebapp/migrations`
 python manage.py migrate
 ```
 
 ### 6.2. Insertion de l'information sur les entités gestionnaires des données
+
+Exécutez la commande suivante dans le terminal de CodeSpace  
+```bash
+#Cette commande crée un nouveau fichier `000X_auto_YYYYMMDD_HHMM.py` (ex: 0003_auto_20250611_1156.py) dans le dossier `geoweb/geowebapp/migrations`
+python manage.py makemigrations --empty geowebapp
+```
+Localiser le fichier créé, remplacer tout son contenu par les codes Python suivants (copier de la ligne 170 à 225) 
+puis sauvegarder le fichier. Assurez-vous de remplacer le pas d'accès et le nom de table manquants dans le dictionnaire cv_files_path
+
 On va répéter les trois étapes précédentes : les mêmes commandes mais des codes différents (ci-dessous).
 Vous pouvez personnaliser les codes de la Ligne 160 à 215 avec vos propres informations.
 ```bash
@@ -216,22 +225,52 @@ class Migration(migrations.Migration):
 
 ```
 
+Exécuter la commande suivante dans le terminal de CodeSpace pour insérer les données dans les tables correspondantes
+```bash
+python manage.py migrate
+```
+
 ### 6.2. Insertion du polygone délimitant la ferme
 À partir d'ici, on va télécharger les fichiers de migration ci-dessous et les téléverser dans le dossier migrations localisé ici:
 `geoweb/geowebapp/migrations`
 ![Fichier de migration de données de délimitation de la ferme](https://github.com/pcelicourt/aguassets/blob/main/migrationsdemo/0004_auto_20250612_1522.py)
 
+Exécuter la commande suivante dans le terminal de CodeSpace pour insérer les données dans les tables correspondantes
+```bash
+python manage.py migrate
+```
+
 ### 6.3. Insertion des polygones délimitant les champs
 ![Fichier de migration de données de délimitation de la ferme](https://github.com/pcelicourt/aguassets/blob/main/migrationsdemo/0005_auto_20250612_1522.py)
+
+Exécuter la commande suivante dans le terminal de CodeSpace pour insérer les données dans les tables correspondantes
+```bash
+python manage.py migrate
+```
 
 ### 6.4. Insertion des polygones délimitant les parcelles
 ![Fichier de migration de données de délimitation des parcelles](https://github.com/pcelicourt/aguassets/blob/main/migrationsdemo/0006_auto_20250612_1522.py)
 
+Exécuter la commande suivante dans le terminal de CodeSpace pour insérer les données dans les tables correspondantes
+```bash
+python manage.py migrate
+```
+
 ### 6.5. Insertion de la géolocalisation des capteurs de mesure de température et d'humidité du sol
 ![Fichier de migration de données de géopositionnement des capteurs](https://github.com/pcelicourt/aguassets/blob/main/migrationsdemo/0007_auto_20250612_1530.py)
 
+Exécuter la commande suivante dans le terminal de CodeSpace pour insérer les données dans les tables correspondantes
+```bash
+python manage.py migrate
+```
+
 ### 6.6. Insertion des données des capteurs 
 ![Fichier de migration des séries temporelles](https://github.com/pcelicourt/aguassets/blob/main/migrationsdemo/0008_auto_20250612_2244.py)
+
+Exécuter la commande suivante dans le terminal de CodeSpace pour insérer les données dans les tables correspondantes
+```bash
+python manage.py migrate
+```
 
 ## 7. Visualisation rapide des résultats 
 Exécutez la commande suivante pour démarrer le serveur de développement :
