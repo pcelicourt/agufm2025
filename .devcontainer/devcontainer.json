@@ -4,7 +4,7 @@
     "dockerfile": "Dockerfile"
   },
   "settings": {
-    "python.defaultInterpreterPath": "/workspaces/${localWorkspaceFolderBasename}/.venv/bin/python",
+    "python.defaultInterpreterPath": "/workspaces/${localWorkspaceFolderBasename}/.rqrad/bin/python",
     "editor.formatOnSave": true
   },
   "postCreateCommand": "python -m venv .rqrad && source .rqrad/bin/activate && pip install --upgrade pip && pip install -r requirements.txt && sudo apt-get update",
