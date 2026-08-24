@@ -41,6 +41,8 @@ python -m venv .rqrad
 source .rqrad/bin/activate
 pip install -r requirements.txt
 ```
+Note: Si vous eprovez des difficultés avec pip. Par exemple, vous recevez le message `ModuleNotFoundError: No module named 'pip._internal.operations.build'`
+Veuillez changer le nom de l'environnement virtuel
 
 ### 5.2. Accéder au répertoire racine `geoweb`
 
@@ -87,7 +89,7 @@ Exécutez la commande suivante dans le terminal de CodeSpace
 #Cette commande crée un nouveau fichier `000X_auto_YYYYMMDD_HHMM.py` (ex: 0002_auto_20250611_1156.py) dans le dossier `geoweb/geowebapp/migrations`
 python manage.py makemigrations --empty geowebapp
 ```
-Localiser le fichier créé, remplacer tout son contenu par les codes Python suivants (copier de la ligne 94 à 147) 
+Localiser le fichier créé, remplacer tout son contenu par les codes Python suivants (copier de la ligne 96 à 149) 
 puis sauvegarder le fichier. Assurez-vous de remplacer le pas d'accès et le nom de table manquants dans le dictionnaire cv_files_path
 
 ```bash
@@ -160,7 +162,7 @@ Exécutez la commande suivante dans le terminal de CodeSpace
 #Cette commande crée un nouveau fichier `000X_auto_YYYYMMDD_HHMM.py` (ex: 0003_auto_20250611_1156.py) dans le dossier `geoweb/geowebapp/migrations`
 python manage.py makemigrations --empty geowebapp
 ```
-Localiser le fichier créé, remplacer tout son contenu par les codes Python suivants (copier de la ligne 170 à 225) 
+Localiser le fichier créé, remplacer tout son contenu par les codes Python suivants (copier de la ligne 171 à 226) 
 puis sauvegarder le fichier. Assurez-vous de remplacer le pas d'accès et le nom de table manquants dans le dictionnaire cv_files_path
 
 On va répéter les trois étapes précédentes : les mêmes commandes mais des codes différents (ci-dessous).

@@ -150,44 +150,7 @@
   <script src="{% static '/js/jquery.slim.min.js' %}"></script>
   <script src="{% static '/js/bootstrap.bundle.min.js' %}"></script>
   <script>
-        // Function to detect the Folium-generated Leaflet map object
-        function getFoliumMap() {
-            var mapDiv = document.getElementById('map_000'); // Find the Folium map div
-            console.log(mapDiv);
-            if (mapDiv) {
-                var mapId = mapDiv.id;
-                return window[mapId];  // Get the corresponding Leaflet map
-            }
-        }
 
-        function findMarkerByTooltip(map, tooltipText) {
-            var foundMarker = null;
-
-            map.eachLayer(function (layer) {
-                if (layer instanceof L.Marker) { // Check if it's a Leaflet marker
-                    let tooltip = layer.getTooltip();
-                    if (tooltip && tooltip.getContent() === tooltipText) {
-                        foundMarker = layer;
-                    }
-                }
-            });
-
-            return foundMarker;
-        }
-
-        function zoomToMarker(map, tooltipText) {
-            var markerFound = findMarkerByTooltip(map, tooltipText);
-
-            if (markerFound) {
-                console.log("Marker found at:", markerFound.getLatLng());
-
-                map.setView(markerFound.getLatLng(), 15);
-
-                markerFound.openTooltip();
-            } else {
-                console.log("Marker not found");
-            }
-        }
 
       function getCity() {
           if(document.readyState === "complete") {
