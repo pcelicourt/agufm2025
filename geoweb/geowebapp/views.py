@@ -3,6 +3,7 @@ from django.shortcuts import render
 
 from django.utils.safestring import SafeString
 from django.utils.safestring import mark_safe
+from django.templatetags.static import static
 from pyproj import Transformer
 from shapely.wkt import loads as load_wkt
 from shapely.ops import transform
@@ -50,9 +51,170 @@ def map_view(request):
                                                 "features": features
                                                 })
 
-
 class MainView(TemplateView):
-    template_name = 'mapl.html'
+    template_name = 'maplm.html'
+
+    def get_context_data(self, **kwargs):
+        figure = folium.Figure()
+        t = Transformer.from_crs(3857, 4326)
+
+        # Create a FeatureGroup layer with sensor elements as a single layer
+        sensors_fg = folium.FeatureGroup()
+        # Create a FeatureGroup layer with field elements as a single layer
+        champs_fg = folium.FeatureGroup()
+        parcelles_fg = folium.FeatureGroup()
+        fermes_fg = folium.FeatureGroup()
+
+        all_features = SamplingFeatures.objects.all()
+        map_center = all_features.first().featuregeometry.centroid
+
+        sensors = all_features.filter(samplingfeaturecode__istartswith='CAF')
+        fermes = all_features.filter(samplingfeaturecode='CookAgronomyFarm')
+        champs = all_features.filter(samplingfeaturecode__istartswith='Field')
+        parcelles = all_features.filter(
+            samplingfeaturecode__istartswith='Parcel')
+
+        # Make the folium map
+        _map = folium.Map(
+            location=t.transform(map_center.x, map_center.y),
+            zoom_start=17,
+            tiles='OpenStreetMap',
+        )
+        _map._name = "map"
+        _map._id = "000"
+
+        _map.add_to(figure)
+
+        for sensor in sensors:
+            coords = sensor.featuregeometry.coords
+            sensors_fg.add_child(folium.Marker(
+                location=list(t.transform(coords[0], coords[1])),
+                popup=sensor.samplingfeaturename,
+                tooltip=sensor.samplingfeaturedescription,
+                icon=folium.Icon(icon='fa-sensor', prefix='fa')
+            ))
+
+        for parcelle in parcelles:
+            wkt = load_wkt(parcelle.featuregeometrywkt)
+
+            # Handle both Polygon and MultiPolygon
+            if wkt.geom_type == 'MultiPolygon':
+                for poly in wkt.geoms:
+                    parcelles_fg.add_child(folium.Polygon(
+                        locations=list(t.transform(coord[0], coord[1])
+                                       for coord in poly.exterior.coords),
+                        smooth_factor=4,
+                        no_clip=True,
+                        popup=parcelle.samplingfeaturename,
+                        tooltip=parcelle.samplingfeaturedescription,
+                        icon=folium.Icon(icon='fa-flag', prefix='fa')
+                    ))
+            else:
+                parcelles_fg.add_child(folium.Polygon(
+                    locations=list(t.transform(coord[0], coord[1])
+                                   for coord in wkt.exterior.coords),
+                    smooth_factor=4,
+                    no_clip=True,
+                    popup=parcelle.samplingfeaturename,
+                    tooltip=parcelle.samplingfeaturedescription,
+                    icon=folium.Icon(icon='fa-flag', prefix='fa')
+                ))
+
+        for champ in champs:
+            wkt = load_wkt(champ.featuregeometrywkt)
+
+            # Handle both Polygon and MultiPolygon
+            if wkt.geom_type == 'MultiPolygon':
+                for poly in wkt.geoms:
+                    champs_fg.add_child(folium.Polygon(
+                        locations=list(t.transform(coord[0], coord[1])
+                                       for coord in poly.exterior.coords),
+                        smooth_factor=4,
+                        no_clip=True,
+                        popup=champ.samplingfeaturename,
+                        tooltip=champ.samplingfeaturedescription,
+                        icon=folium.Icon(icon='fa-flag', prefix='fa')
+                    ))
+            else:
+                champs_fg.add_child(folium.Polygon(
+                    locations=list(t.transform(coord[0], coord[1])
+                                   for coord in wkt.exterior.coords),
+                    smooth_factor=4,
+                    no_clip=True,
+                    popup=champ.samplingfeaturename,
+                    tooltip=champ.samplingfeaturedescription,
+                    icon=folium.Icon(icon='fa-flag', prefix='fa')
+                ))
+
+        for ferme in fermes:
+            wkt = load_wkt(ferme.featuregeometrywkt)
+
+            # Handle both Polygon and MultiPolygon
+            if wkt.geom_type == 'MultiPolygon':
+                for poly in wkt.geoms:
+                    fermes_fg.add_child(folium.Polygon(
+                        locations=list(t.transform(coord[0], coord[1])
+                                       for coord in poly.exterior.coords),
+                        smooth_factor=4,
+                        no_clip=True,
+                        popup=ferme.samplingfeaturename,
+                        tooltip=ferme.samplingfeaturedescription,
+                        icon=folium.Icon(icon='fa-flag', prefix='fa')
+                    ))
+            else:
+                fermes_fg.add_child(folium.Polygon(
+                    locations=list(t.transform(coord[0], coord[1])
+                                   for coord in wkt.exterior.coords),
+                    smooth_factor=4,
+                    no_clip=True,
+                    popup=ferme.samplingfeaturename,
+                    tooltip=ferme.samplingfeaturedescription,
+                    icon=folium.Icon(icon='fa-flag', prefix='fa')
+                ))
+
+        # Modify Marker template to include the onClick event
+        click_template = """{% macro script(this, kwargs) %}
+                            var {{ this.get_name() }} = L.marker(
+                                {{ this.location|tojson }},
+                                {{ this.options|tojson }}
+                            ).addTo({{ this._parent.get_name() }}).on('click', getSensor);
+                           {% endmacro %}
+                        """
+        # Change template to custom template
+        Marker._template = Template(click_template)
+        _ = _map._repr_html_()
+
+        # static() builds a URL that's correct no matter what route this view
+        # is mounted under, instead of a relative './static/...' path.
+        event_handler = folium.JavascriptLink(static('js/eventhandler.js'))
+
+        plotly_js = "https://cdn.plot.ly/plotly-3.0.1.min.js"
+        _map.get_root().html.add_child(folium.JavascriptLink(plotly_js))
+        _map.get_root().html.add_child(event_handler)
+
+        _map.add_child(sensors_fg)
+        _map.add_child(parcelles_fg)
+        _map.add_child(champs_fg)
+        _map.add_child(fermes_fg)
+
+        # LayerControl object to control display of layers, must be added last to the map.
+        _map.add_child(folium.LayerControl())
+
+        # json.dumps gives a plain JSON string. JsonResponse is an HTTP response
+        # object meant to be *returned* from a view, not used as a value source —
+        # its .content is bytes (e.g. b'[...]'), which prints the b'' prefix
+        # literally when dropped into a template and then fails JSON.parse() in JS.
+        sensors_json = json.dumps(
+            SamplingFeaturesSerializers(sensors, many=True).data)
+
+        return {
+            "map": figure._repr_html_(),
+            "title": "Cook Agronomy Farm",
+            "sensors": sensors_json,
+        }
+
+class OldMainView(TemplateView):
+    template_name = 'home_detailm.html'
 
     def get_context_data(self, **kwargs):
         figure = folium.Figure()
@@ -178,7 +340,7 @@ class MainView(TemplateView):
                 icon = folium.Icon(icon='fa-flag', prefix='fa')
 
         # Modify Marker template to include the onClick event
-        click_template= """{% macro script(this, kwargs) %}
+        click_template = """{% macro script(this, kwargs) %}
                             var {{ this.get_name() }} = L.marker(
                                 {{ this.location|tojson }},
                                 {{ this.options|tojson }}
@@ -186,11 +348,11 @@ class MainView(TemplateView):
                            {% endmacro %}
                         """
         # Change template to custom template
-        Marker._template= Template(click_template)
-        _= _map._repr_html_()
-        event_handler= folium.JavascriptLink('./static/js/eventhandler.js')
+        Marker._template = Template(click_template)
+        _ = _map._repr_html_()
+        event_handler = folium.JavascriptLink('./static/js/eventhandler.js')
 
-        plotly_js= "https://cdn.plot.ly/plotly-3.0.1.min.js"
+        plotly_js = "https://cdn.plot.ly/plotly-3.0.1.min.js"
         _map.get_root().html.add_child(folium.JavascriptLink(plotly_js))
         _map.get_root().html.add_child(event_handler)
 
@@ -202,6 +364,6 @@ class MainView(TemplateView):
         # LayerControl object to control display of layers, must be added last to the map.
         _map.add_child(folium.LayerControl())
 
-        sensors_json= JsonResponse(
-            SamplingFeaturesSerializers(sensors, many=True).data).content
-        return {"map": figure._repr_html_(), 'title': 'Cook Agronomy Farm', 'sensors': sensors_json}
+        sensors_json = json.dumps(
+            SamplingFeaturesSerializers(sensors, many=True).data)
+        return {"map": _map, 'title': 'Cook Agronomy Farm', 'sensors': sensors_json}

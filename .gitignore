@@ -8,6 +8,7 @@ env/
 .env
 */site-packages/
 */dist-packages/
+geoweb/geowebapp/migrations/
 
 ###############################################
 # PYTHON CACHE & BUILD ARTIFACTS
